@@ -1,0 +1,6 @@
+Coloque aqui a imagem da página final (a do botão de WhatsApp).
+
+Nome do arquivo: banner.png   (pode ser 1602 x 982; se pesar muito, comprima antes, ideal abaixo de 500 KB)
+
+Se o arquivo não existir, a página simplesmente não mostra imagem.
+Para usar outro nome ou formato (jpg, webp), troque "/img/banner.png" no index.html.

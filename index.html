@@ -1,0 +1,175 @@
+<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Cadastro para Ponto de Coleta</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#fff;color:#333;font-family:"Proxima Nova",system-ui,-apple-system,Arial,sans-serif;line-height:1.5}
+header{background:#ffe600;padding:10px 20px;display:flex;align-items:center}header img{height:38px}
+.w{max-width:560px;margin:0 auto;padding:0 20px}
+h1{font-size:28px;line-height:1.15;text-align:center;margin:26px 0 8px}h2{font-size:22px;text-align:center;margin:30px 0 10px}
+.sub{text-align:center;color:#666;margin:0 0 6px}
+.bar{width:60px;height:8px;border-radius:9px;background:#ffe600;margin:28px auto 0}
+.card{background:#fff;border-radius:20px;padding:22px;margin:16px 0;box-shadow:0 2px 14px rgba(0,0,0,.09)}
+.btn{display:block;width:100%;border:0;border-radius:6px;background:#3483fa;color:#fff;font-size:16px;font-weight:600;padding:14px;cursor:pointer;text-align:center;text-decoration:none}
+.btn.alt{background:#e3edfb;color:#3483fa}.btn.wa{background:#25d366;color:#fff}.btn:disabled{opacity:.5}
+ul{list-style:none;padding:0;margin:0}li{padding-left:28px;position:relative;margin:10px 0}li:before{content:"✓";color:#3483fa;position:absolute;left:4px;font-weight:700}
+.big{font-size:38px;font-weight:800;text-align:center;margin:6px 0}.mut{color:#777;font-size:13px;text-align:center}
+.ins{background:#fffbd1;border-left:4px solid #ffe600;padding:12px 14px;border-radius:8px;margin:14px 0;font-size:14px}
+.ref{background:#f5f5f5;border-radius:10px;padding:12px 14px;margin:14px 0;font-size:14px}.ref p{margin:6px 0}
+.pre{display:flex;gap:8px;margin:10px 0}.pre button{flex:1;border:1px solid #3483fa;background:#fff;color:#3483fa;border-radius:6px;padding:9px 6px;font-size:13px;font-weight:600;cursor:pointer}
+label{display:block;font-weight:600;font-size:14px;margin:14px 0 4px}
+input,select{width:100%;padding:12px;border:1px solid #ddd;border-radius:6px;font:inherit;background:#fff;color:#333}input[type=range]{padding:0}
+.opt{display:block;width:100%;text-align:left;background:#f5f5f5;color:#333;border:2px solid transparent;border-radius:10px;padding:14px;margin:10px 0;font-size:15px;cursor:pointer}.opt:hover{border-color:#3483fa}
+.pb{height:6px;background:#eee;border-radius:9px;overflow:hidden;margin-bottom:16px}.pb i{display:block;height:100%;background:#ffe600;width:0;transition:width .3s}
+.chk{display:flex;gap:10px;font-weight:400;font-size:13px;align-items:flex-start}.chk input{width:auto;margin-top:4px}
+.err{color:#d93025;font-size:13px;min-height:18px}.hide{display:none}.hp{display:none!important}
+body{padding-bottom:96px}
+.sticky{position:fixed;left:0;right:0;bottom:0;z-index:20;background:#fff;box-shadow:0 -2px 14px rgba(0,0,0,.12);padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px))}.sticky>*{max-width:520px;margin-left:auto;margin-right:auto}.sticky .err{text-align:center;min-height:0;margin-bottom:6px}
+#ld{position:fixed;inset:0;z-index:50;background:rgba(255,255,255,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;font-weight:600;color:#333}#ld.hide{display:none}.spin{width:56px;height:56px;border:6px solid #ffe600;border-top-color:#3483fa;border-radius:50%;animation:sp .8s linear infinite}@keyframes sp{to{transform:rotate(360deg)}}
+footer{font-size:12px;color:#888;text-align:center;padding:30px 20px 40px}
+</style><!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init','29072105285719610');
+fbq('track','PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=29072105285719610&amp;ev=PageView&amp;noscript=1" alt=""></noscript>
+<!-- End Meta Pixel Code -->
+      <!-- UTMify Script -->
+    <script
+        src="https://cdn.utmify.com.br/scripts/utms/latest.js"
+        data-utmify-prevent-xcod-sck
+        data-utmify-prevent-subids
+        async
+        defer
+    ></script>
+        <script>
+    window.pixelId = "691e70b19364f8461308455a";
+    var a = document.createElement("script");
+    a.setAttribute("async", "");
+    a.setAttribute("defer", "");
+    a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
+    document.head.appendChild(a);
+    </script>
+    
+</head><body>
+<header><img src="img/logo.jpg" style="border-radius:8px" alt="Logo do Ponto de Coleta" onerror="this.style.display='none'"></header>
+<div class="w">
+
+<section id="quiz"><img id="imagemEtapa" alt="Ilustração da etapa" style="display:none;width:100%;height:auto;max-height:260px;object-fit:contain;margin:12px auto;border-radius:12px" onerror="this.style.display='none'">
+<h1>Transforme sua loja em um ponto de coleta e ganhe mais</h1>
+<p class="sub">Responda 5 perguntas rápidas e veja quanto sua loja pode render</p>
+<div class="card"><div class="pb"><i id="pbi"></i></div><h2 id="qt" style="text-align:left;font-size:20px;margin-top:0"></h2><div id="qo"></div><div class="ins" id="qi"></div></div>
+</section>
+
+<section id="result" class="hide">
+<h2>Quanto sua loja pode ganhar</h2>
+<div class="card">
+<label for="pk">Pacotes por dia na sua loja</label><input type="range" id="pk" min="5" max="200" value="60"><div class="mut" id="pkv"></div>
+<div class="big" id="sim"></div><div class="mut">por mês · estimativa com R$ 0,65 por pacote, sem promessa de ganho</div>
+</div>
+<p class="mut">Referência de mercado: de R$ 700 a R$ 4.000+ por mês, conforme a região.</p>
+<div class="card" style="padding:16px 20px"><ul>
+<li><b>CNPJ ativo</b> e ponto físico</li>
+<li>A partir de <b>4 m²</b> livres para pacotes</li>
+<li>Orientações sobre as próximas etapas após a análise do cadastro</li></ul></div>
+<div class="sticky"><button class="btn" id="toForm">Quero me cadastrar</button></div>
+</section>
+
+<section id="formS" class="hide">
+<h2>Cadastro de interesse</h2>
+<div class="card">
+<label for="nome">Nome completo</label><input id="nome" autocomplete="name">
+<label for="cpf">CPF</label><input id="cpf" inputmode="numeric" placeholder="000.000.000-00">
+<label for="cnpj">CNPJ</label><input id="cnpj" inputmode="numeric" placeholder="00.000.000/0000-00">
+<div id="cnpjinfo" class="ins hide"></div>
+<label for="fant">Nome da loja / negócio</label><input id="fant">
+<label for="cid">Cidade / UF</label><input id="cid">
+<label for="seg">Tipo de comércio / atividade</label><input id="seg" placeholder="Preenchido pelo CNPJ">
+<label for="m2">Espaço livre para pacotes</label><select id="m2"><option value="">Selecione</option><option>Menos de 4 m²</option><option>4 a 8 m²</option><option>8 a 15 m²</option><option>Mais de 15 m²</option></select>
+<label for="fat">Faturamento mensal médio</label><select id="fat"><option value="">Selecione</option><option>Até R$ 5 mil</option><option>R$ 5 a 15 mil</option><option>R$ 15 a 30 mil</option><option>R$ 30 a 60 mil</option><option>Acima de R$ 60 mil</option></select>
+<label for="zap">WhatsApp</label><input id="zap" inputmode="tel" placeholder="(11) 90000-0000">
+<label for="mail">E-mail (opcional)</label><input id="mail" type="email">
+<input class="hp" id="website" name="empresa_site_ref" tabindex="-1" autocomplete="off" aria-hidden="true">
+<label class="chk" style="margin-top:16px"><input type="checkbox" id="ok"> Autorizo o uso dos meus dados para contato sobre este serviço, conforme a LGPD, e confirmo ter CNPJ ativo e ponto físico.</label>
+</div>
+<div class="sticky"><div class="err" id="err"></div><button class="btn" id="send">Enviar cadastro</button></div>
+</section>
+
+<section id="done" class="hide"><div class="card" style="text-align:center;margin-top:26px"><div style="font-size:48px">✅</div><h2 style="margin-top:6px">Cadastro recebido!</h2>
+<p>Agora é só falar com a nossa equipe pelo WhatsApp para os próximos passos.</p>
+<div class="ins" style="text-align:left;margin-top:18px">Nossa equipe entrará em contato para explicar as próximas etapas e verificar a disponibilidade do serviço na sua região.</div>
+<img src="/img/banner.png" alt="Informações sobre o ponto de coleta" loading="lazy" style="display:block;width:100%;height:auto;border-radius:16px;margin-top:16px" onerror="this.style.display='none'">
+
+</div>
+<div class="sticky"><a class="btn wa" id="wa" target="_blank" rel="noopener">Falar no WhatsApp</a></div></section>
+
+</div>
+<footer>Página oficial de cadastro de interesse em pontos de coleta.</footer>
+<div id="ld" class="hide"><div class="spin"></div><div id="ldt"></div></div>
+<script>
+var WA_NUMBER="5511982072072"; // TROQUE pelo seu WhatsApp: 55 + DDD + número, só dígitos
+var $=function(i){return document.getElementById(i)};
+var views=["quiz","result","formS","done"];
+function show(v){views.forEach(function(x){$(x).classList.toggle("hide",x!==v)});window.scrollTo(0,0)}
+
+var Q=[{t:"Quantos clientes entram na sua loja por dia?",o:["Menos de 20","20 a 50","50 a 100","Mais de 100"],i:"Cada pessoa que vem buscar ou devolver um pacote é um visitante a mais dentro da sua loja."},
+{t:"Você tem espaço sobrando para guardar pacotes?",o:["Sim, mais de 4 m²","Cerca de 4 m²","Preciso liberar espaço","Não tenho"],i:"A referência de mercado é a partir de 4 m². Um canto organizado já resolve."},
+{t:"Como está o movimento nos dias fracos?",o:["Muito parado","Oscila bastante","Razoável","Sempre cheio"],i:"Pontos de coleta trazem fluxo constante, inclusive em dias e horários fracos."},
+{t:"Você ofereceria algo a quem vem buscar um pacote?",o:["Sim, já tenho produtos à mão","Talvez, com uma vitrine","Não tinha pensado nisso","Prefiro só receber pacotes"],i:"Quem entra vê seus produtos e muitos compram por impulso: renda extra além do ganho por pacote."},
+{t:"Você tem CNPJ ativo e ponto físico?",o:["Sim, os dois","CNPJ sim, ponto em breve","Só ponto, sem CNPJ","Ainda não"],i:"CNPJ ativo e conta PJ são obrigatórios para participar."}];
+var ans=[],qi=0;
+function ren(){var q=Q[qi];var im=$("imagemEtapa");if(im){im.src="/img/etapas/etapa-"+(qi+1)+".png";im.style.display="block";}$("pbi").style.width=(qi/Q.length*100)+"%";$("qt").textContent=q.t;$("qi").textContent="💡 "+q.i;var h=$("qo");h.innerHTML="";q.o.forEach(function(o){var b=document.createElement("button");b.className="opt";b.textContent=o;b.onclick=function(){ans.push(q.t+": "+o);qi++;qi<Q.length?ren():fin()};h.appendChild(b)})}
+function fin(){show("result");sim()}
+ren();
+
+var GANHO=0.65;
+function sim(){var p=+$("pk").value;$("pkv").textContent=p+" pacotes/dia";
+$("sim").textContent="R$ "+(p*GANHO*26).toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2})}
+$("pk").oninput=sim;sim();
+$("toForm").onclick=function(){show("formS")};
+
+var loadT=null;
+function startLoad(){var m=["Verificando seus dados...","Conferindo seu CNPJ...","Enviando seu cadastro..."],i=0;$("ld").classList.remove("hide");$("ldt").textContent=m[0];loadT=setInterval(function(){i=(i+1)%m.length;$("ldt").textContent=m[i]},900)}
+function stopLoad(){clearInterval(loadT);$("ld").classList.add("hide")}
+function dg(s){return s.replace(/\D/g,"")}
+function mk(el,fn){el.addEventListener("input",function(){el.value=fn(dg(el.value))})}
+mk($("cpf"),function(d){d=d.slice(0,11);return d.replace(/(\d{3})(\d)/,"$1.$2").replace(/(\d{3})(\d)/,"$1.$2").replace(/(\d{3})(\d{1,2})$/,"$1-$2")});
+mk($("cnpj"),function(d){d=d.slice(0,14);return d.replace(/(\d{2})(\d)/,"$1.$2").replace(/(\d{3})(\d)/,"$1.$2").replace(/(\d{3})(\d)/,"$1/$2").replace(/(\d{4})(\d{1,2})$/,"$1-$2")});
+mk($("zap"),function(d){d=d.slice(0,11);return d.replace(/(\d{2})(\d)/,"($1) $2").replace(/(\d{5})(\d{1,4})$/,"$1-$2")});
+function vCPF(c){c=dg(c);if(c.length!=11||/^(\d)\1+$/.test(c))return false;for(var t=9;t<11;t++){var s=0;for(var i=0;i<t;i++)s+=c[i]*(t+1-i);if(((s*10)%11)%10!=c[t])return false}return true}
+function vCNPJ(c){c=dg(c);if(c.length!=14||/^(\d)\1+$/.test(c))return false;function d(n){var s=0,p=n-7;for(var i=0;i<n;i++){s+=c[i]*p--;if(p<2)p=9}var r=s%11;return r<2?0:11-r}return d(12)==c[12]&&d(13)==c[13]}
+
+// Preenchimento automático pelo CNPJ (nome do negócio, cidade, tipo de comércio)
+var lastC="",edited={fant:false,cid:false,seg:false};
+["fant","cid","seg"].forEach(function(k){$(k).addEventListener("input",function(){edited[k]=true});$(k).addEventListener("change",function(){edited[k]=true})});
+function cap(s){return String(s||"").toLowerCase().replace(/(^|\s)\S/g,function(c){return c.toUpperCase()})}
+var cnpjAtivo=null;
+$("cnpj").addEventListener("input",async function(){var d=dg($("cnpj").value),b=$("cnpjinfo");
+b.classList.add("hide");
+if(d.length!==14){lastC="";cnpjAtivo=null;return}
+if(!vCNPJ(d))return;
+if(d===lastC){if(cnpjAtivo===false)inativo();return}
+lastC=d;cnpjAtivo=null;
+function inativo(){b.classList.remove("hide");b.style.cssText="color:#d93025;background:#fdecea;border-left-color:#d93025;font-weight:600";b.textContent="Este CNPJ não está ativo na Receita. É necessário CNPJ ativo para participar."}
+try{var r=await(await fetch("/api/cnpj?cnpj="+d)).json();
+if(dg($("cnpj").value)!==d||!r.found)return;
+cnpjAtivo=!!r.ativa;
+if(!r.ativa){inativo();return}
+var nome=(r.fantasia||r.razao||"").replace(/^\d{2}\.\d{3}\.\d{3}\s+/,"");
+if(!edited.fant&&nome)$("fant").value=nome;
+if(!edited.cid&&r.cidade)$("cid").value=cap(r.cidade)+"/"+r.uf;
+if(!edited.seg&&r.atividade)$("seg").value=r.atividade;
+}catch(e){}});
+
+$("send").onclick=async function(){
+var l={nome:$("nome").value.trim(),cpf:$("cpf").value,cnpj:$("cnpj").value,fant:$("fant").value.trim(),cid:$("cid").value.trim(),seg:$("seg").value,m2:$("m2").value,fat:$("fat").value,zap:$("zap").value,mail:$("mail").value.trim(),quiz:ans.join(" | "),website:$("website").value,consent:$("ok").checked},e="";
+if(l.nome.split(" ").length<2)e="Informe o nome completo.";else if(!vCPF(l.cpf))e="CPF inválido.";else if(!vCNPJ(l.cnpj))e="CNPJ inválido.";else if(cnpjAtivo===false)e="Este CNPJ não está ativo na Receita. É necessário CNPJ ativo para participar.";else if(!l.fant||!l.cid||!l.seg||!l.m2||!l.fat)e="Preencha todos os campos.";else if(dg(l.zap).length<10)e="WhatsApp inválido.";else if(!l.consent)e="É necessário autorizar o contato.";
+$("err").textContent=e;if(e)return;
+$("send").disabled=true;var t0=Date.now();startLoad();
+try{var r=await fetch("/api/lead",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(l)});
+if(!r.ok){var j={};try{j=await r.json()}catch(z){}throw {c:r.status,e:j.error}}
+var msg="Olá! Acabei de enviar meu cadastro para ser ponto de coleta.\nNome: "+l.nome+"\nNegócio: "+l.fant+"\nCNPJ: "+l.cnpj;
+$("wa").href="https://wa.me/"+WA_NUMBER+"?text="+encodeURIComponent(msg);
+// Lead no Meta Pixel: só depois que o cadastro foi salvo. Sem enviar CPF, CNPJ, telefone ou outros dados pessoais.
+try{if(typeof window.fbq==="function")window.fbq("track","Lead",{content_name:"Cadastro ponto de coleta"})}catch(z){}
+await new Promise(function(z){setTimeout(z,Math.max(0,2600-(Date.now()-t0)))});stopLoad();show("done")}
+catch(x){stopLoad();$("send").disabled=false;var m="Não foi possível enviar. Tente novamente.";if(x&&x.c===404)m="Erro 404: o envio só funciona no site publicado na Vercel.";else if(x&&x.e==="db")m="Erro de banco de dados: conecte o Upstash na aba Storage da Vercel e faça Redeploy.";else if(x&&x.e==="inativo")m="Este CNPJ não está ativo na Receita. É necessário CNPJ ativo para participar.";else if(x&&x.c)m="Erro "+x.c+". Verifique o cadastro e tente novamente.";$("err").textContent=m}};
+</script></body></html>
