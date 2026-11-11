@@ -57,6 +57,33 @@ body{background:#090b0e;color:#edf0f3}
 .header .live-every{display:none}
 .header .refresh-btn{padding:7px 9px;font-size:11px;border-radius:8px;background:#17251d;border-color:#254331;color:#c3e7cd}
 @media(max-width:650px){.header-inner{gap:7px}.header .brand-title{font-size:13px}.header .brand-sub{font-size:10px}.header #syncState,.header .clock-now{display:none}.header .live-indicator strong{font-size:10px}.header .refresh-btn{font-size:0;padding:7px 9px}.header .refresh-btn::first-letter{font-size:14px}}
+</style><style>
+/* Preview compacto: prioriza dados operacionais e evita excesso de texto */
+.lead-card{padding:14px 15px;margin-bottom:9px;border-radius:14px}
+.lead-name{font-size:14px;line-height:1.25;letter-spacing:.05px}
+.lead-sub{font-size:11px;margin-top:3px}
+.chips{gap:5px}.pill{font-size:10px;padding:4px 7px}
+.compact-meta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px 14px;margin:12px 0}
+.compact-meta .kvkey{font-size:10px;margin-bottom:3px}
+.compact-meta .kvvalue{font-size:11px;line-height:1.35;font-weight:600}
+.actions{gap:7px;padding-top:10px}
+.actions .action{font-size:11px;padding:8px 11px;min-height:34px}
+.toolbar{display:flex;align-items:center;justify-content:flex-end;gap:7px;flex-wrap:wrap;max-width:100%}
+.toolbar .btn{font-size:11px;padding:8px 10px;white-space:normal;line-height:1.25}
+.topbar{gap:10px}.topbar h1{font-size:22px}.muted{font-size:11px}
+@media(max-width:760px){
+ .compact-meta{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px 12px}
+ .topbar{align-items:flex-start;flex-direction:column}
+ .toolbar{width:100%;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+ .toolbar .btn{width:100%;min-height:36px;font-size:10px;padding:7px 8px}
+ .lead-head{gap:8px}
+}
+@media(max-width:380px){
+ .compact-meta{grid-template-columns:1fr 1fr}
+ .lead-card{padding:12px}
+ .actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+ .actions .action{justify-content:center;text-align:center}
+}
 </style></head><body><header class="header"><div class="header-inner"><img class="brand-logo" src="img/logo.jpg" alt="" onerror="this.style.display='none'"><div><div class="brand-title">Ponto de Coleta</div><div class="brand-sub">Painel de fichas</div></div><div class="live-strip" aria-label="Status de atualização do painel">
   <div class="live-indicator"><span id="liveDot" class="live-dot pending"></span><strong id="liveLabel">Conectando…</strong><span class="live-divider">•</span><span id="syncState">Aguardando atualização</span></div>
   <div class="live-right"><span id="clockNow" class="clock-now">--:--:--</span><span class="live-every">Atualiza a cada 15 s</span><button class="btn refresh-btn" id="rf" type="button">↻ Atualizar agora</button></div>
@@ -149,52 +176,52 @@ function stats(){var total=allLeads.length,novo=allLeads.filter(l=>!l.status||l.
  [["statTotal",total],["statNew",novo],["statYes",aceitos],["statNo",recusados]].forEach(x=>$(x[0]).textContent=x[1]);$("cnt").textContent=total+" fichas no banco"}
 function renderLeads(d){var h=$("list");h.replaceChildren();if(!d.length){h.appendChild(node("div","empty","Nenhuma ficha encontrada com esses filtros."));return}
  d.forEach(l=>{
-  var c=node("article","lead-card"),head=node("div","lead-head"),main=node("div","lead-main"),nm=node("div","lead-name",l.nome||"Cadastro sem nome"),sub=node("div","lead-sub",[l.fant,l.cid].filter(Boolean).join(" · ")||"Dados em atualização");
+  var c=node("article","lead-card"),head=node("div","lead-head"),main=node("div","lead-main");
+  var fullName=(l.cpf_dados&&l.cpf_dados.nome)||l.nome||"Cadastro sem nome";
+  var nm=node("div","lead-name",fullName);
+  var sub=node("div","lead-sub",[l.fant,l.cid].filter(Boolean).join(" · ")||"Dados em atualização");
   main.append(nm,sub);
-  var chips=node("div","chips"),st=safe(l.status||"novo"),badge=node("span","pill "+(st==="contatado"?"picked":st==="fechado"?"closed":"new"),st==="contatado"?"Peguei":st==="fechado"?"Fechado":"Novo");
-  chips.appendChild(badge);
-  chips.appendChild(node("span","pill "+(l.reuniao_video==="aceitou"?"yes":l.reuniao_video==="nao_aceitou"?"no":"muted"),l.reuniao_video==="aceitou"?"Aceitou reunião":l.reuniao_video==="nao_aceitou"?"Orientação por telefone":"Reunião pendente"));
+  var chips=node("div","chips"),st=safe(l.status||"novo");
+  chips.appendChild(node("span","pill "+(st==="contatado"?"picked":st==="fechado"?"closed":"new"),st==="contatado"?"Peguei":st==="fechado"?"Fechado":"Novo"));
+  chips.appendChild(node("span","pill "+(l.reuniao_video==="aceitou"?"yes":l.reuniao_video==="nao_aceitou"?"no":"muted"),l.reuniao_video==="aceitou"?"Aceitou reunião":l.reuniao_video==="nao_aceitou"?"Não aceitou · telefone":"Reunião pendente"));
   head.append(main,chips);c.appendChild(head);
-  var meta=node("div","lead-meta");rowKV(meta,"CNPJ",l.cnpj);rowKV(meta,"WhatsApp",l.zap);rowKV(meta,"Recebido",dateText(l.created_at));c.appendChild(meta);
+  var q=qualificacao(l),cn=l.cnpj_dados||{},cp=l.cpf_dados||{};
+  var legal=[cn.natureza,cn.porte,cn.simples,cn.mei].filter(Boolean).join(" · ")||"Não informado";
+  var revenue=cn.faixa||l.fat||"Não informado";
+  var preview=node("div","lead-meta compact-meta");
+  rowKV(preview,"Nome completo",fullName);
+  rowKV(preview,"Idade",cp.idade!=null?cp.idade+" anos":"Não informada");
+  rowKV(preview,"Bancos",q.bancos.join(", ")||"Não informado");
+  rowKV(preview,"Horário para contato",q.horario||"Não informado");
+  rowKV(preview,"Faturamento",revenue);
+  rowKV(preview,"Tipo / porte",legal);
+  rowKV(preview,"Cidade / UF",l.cid||"Não informado");
+  c.appendChild(preview);
   var actions=node("div","actions");
   function act(label,cls,fn){var b=node("button","action "+cls,label);b.type="button";b.onclick=fn;actions.appendChild(b);return b}
-  if(st==="novo"){
-    act("✋ Peguei","primary hand-action",async()=>{
-      var rbtn=actions.querySelector(".hand-action");rbtn.disabled=true;rbtn.textContent="⏳ Salvando…";
-      try{
-        var r=await api("PATCH","?id="+encodeURIComponent(l.id),{status:"contatado"});
-        if(!r.ok)throw Error("Falha ao salvar");
-        l.status="contatado";rbtn.textContent="✓ Peguei!";rbtn.classList.add("done");
-        stats();showToast("Ficha marcada como Peguei.");
-        setTimeout(renderFiltered,850);
-      }catch(e){rbtn.disabled=false;rbtn.textContent="✋ Peguei";showToast("Erro ao marcar. Tente novamente.",true)}
-    });
-  }
   act("⧉ Copiar ficha","secondary copy-action",async()=>{
     var copyBtn=actions.querySelector(".copy-action");
-    copyBtn.disabled=true;copyBtn.textContent="⏳ Copiando…";
+    copyBtn.disabled=true;copyBtn.textContent="Copiando…";
     var ok=await copyText(ficha(l));
-    if(!ok){copyBtn.textContent="Tentar copiar";copyBtn.disabled=false;showToast("Não foi possível copiar; ficha não foi marcada.",true);return}
+    if(!ok){copyBtn.textContent="Tentar copiar";copyBtn.disabled=false;showToast("Não foi possível copiar a ficha.",true);return}
     copyBtn.textContent="✓ Copiado!";
-    copyBtn.classList.add("done");showToast("Ficha copiada para a área de transferência.");
-    // Ao copiar uma ficha NOVA, marcar automaticamente como Peguei.
+    copyBtn.classList.add("done");showToast("Ficha copiada.");
     if(!l.status||l.status==="novo"){
       try{
         var r=await api("PATCH","?id="+encodeURIComponent(l.id),{status:"contatado"});
-        if(!r.ok)throw Error("Falha ao salvar");
-        l.status="contatado";copyBtn.textContent="✓ Copiado e peguei!";
+        if(!r.ok)throw Error();
+        l.status="contatado";copyBtn.textContent="✓ Copiado · Peguei";
         stats();showToast("Ficha copiada e marcada como Peguei.");
-      }catch(e){copyBtn.textContent="✓ Copiado (não marcado)";showToast("Copiado, mas não foi possível marcar como Peguei. Use o botão Peguei.",true)}
+      }catch(e){copyBtn.textContent="✓ Copiado (não marcado)";showToast("Copiada, mas não foi possível marcar como Peguei.",true)}
     }
-    setTimeout(()=>{copyBtn.disabled=false;renderFiltered()},1400);
+    setTimeout(()=>{copyBtn.disabled=false;renderFiltered()},1200);
   });
-  var more=act(expanded.has(l.id)?"Ocultar detalhes":"Ver ficha","secondary",()=>{if(expanded.has(l.id))expanded.delete(l.id);else expanded.add(l.id);renderFiltered()});
-  act("Excluir ficha","danger",async()=>{if(!confirm("Excluir definitivamente a ficha de "+safe(l.nome)+"? Essa ação não pode ser desfeita."))return;try{var rr=await api("DELETE","?id="+encodeURIComponent(l.id));if(!rr.ok)throw Error();allLeads=allLeads.filter(x=>x.id!==l.id);expanded.delete(l.id);stats();renderFiltered();$("feedback").textContent="Ficha excluída."}catch(e){alert("Não foi possível excluir a ficha.")}});
-  var a=node("a","action whatsapp","WhatsApp");a.href="https://wa.me/55"+dg(l.zap)+"?text="+encodeURIComponent("Olá "+safe(l.nome).split(" ")[0]+", vi seu cadastro para ser ponto de coleta.");a.target="_blank";a.rel="noopener noreferrer";actions.appendChild(a);
+  act(expanded.has(l.id)?"Ocultar ficha":"Ver ficha","secondary",()=>{if(expanded.has(l.id))expanded.delete(l.id);else expanded.add(l.id);renderFiltered()});
+  act("Excluir ficha","danger",async()=>{if(!confirm("Excluir definitivamente a ficha de "+fullName+"? Essa ação não pode ser desfeita."))return;try{var rr=await api("DELETE","?id="+encodeURIComponent(l.id));if(!rr.ok)throw Error();allLeads=allLeads.filter(x=>x.id!==l.id);expanded.delete(l.id);stats();renderFiltered();showToast("Ficha excluída.")}catch(e){showToast("Não foi possível excluir a ficha.",true)}});
   c.appendChild(actions);
   if(expanded.has(l.id)){
    var details=node("div","details"),q=qualificacao(l);
-   section(details,"Dados do cadastro",[["Nome",l.nome],["CPF",l.cpf],["CNPJ",l.cnpj],["Negócio",l.fant],["Cidade / UF",l.cid],["Segmento",l.seg],["Espaço",l.m2],["Faturamento",l.fat],["WhatsApp",l.zap],["E-mail",l.mail]]);
+   section(details,"Dados do cadastro",[["Nome completo",fullName],["CPF",l.cpf],["CNPJ",l.cnpj],["Negócio",l.fant],["Cidade / UF",l.cid],["Segmento",l.seg],["Espaço",l.m2],["Faturamento",l.fat],["WhatsApp",l.zap],["E-mail",l.mail]]);
    section(details,"Qualificação",[["Bancos",q.bancos.join(", ")],["Dispositivo",q.dispositivo],["Horário",q.horario],["Reunião",meetingLabel(l)],["Quiz",safe(l.quiz).split(" | ").join(" • ")]]);
    if(l.cpf_dados)section(details,"Consulta CPF (somente admin)",dadosCPF(l.cpf_dados));
    if(l.cnpj_dados)section(details,"Dados da Receita (CNPJ)",dados(l.cnpj_dados));
