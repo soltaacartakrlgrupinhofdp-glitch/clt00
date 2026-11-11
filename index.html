@@ -137,7 +137,7 @@ fbq('track','PageView');
 <script>
 var WA_NUMBER="5511982072072"; // TROQUE pelo seu WhatsApp: 55 + DDD + número, só dígitos
 var $=function(i){return document.getElementById(i)};
-var views=["quiz","result","formS","qualS","done"];
+var views=["quiz","result","formS","qualS","meetingS","appS","done"];
 function show(v){views.forEach(function(x){$(x).classList.toggle("hide",x!==v)});window.scrollTo(0,0)}
 
 var Q=[{t:"Quantos clientes entram na sua loja por dia?",o:["Menos de 20","20 a 50","50 a 100","Mais de 100"],i:"Cada pessoa que vem buscar ou devolver um pacote é um visitante a mais dentro da sua loja."},
@@ -211,7 +211,6 @@ async function submitMeeting(decision){
 if(submitting)return;submitting=true;
 var err=decision==="aceitou"?$("meetingErr"):$("appErr");err.textContent="";
 var btn=decision==="aceitou"?$("meetingYes"):$("appContinue");btn.disabled=true;
-var btn=$("qualNext");btn.disabled=true;
 var payload=Object.assign({},cadastro,{
   bancos: qualData.bancos.slice(0,3),
   dispositivo: qualData.dispositivo,
