@@ -14,11 +14,26 @@
 @media(max-width:750px){.container{padding:15px}.stats{grid-template-columns:repeat(2,1fr)}.filters{grid-template-columns:1fr}.lead-head{display:block}.chips{justify-content:flex-start;margin-top:10px}.lead-meta{grid-template-columns:1fr 1fr}.toolbar{width:100%}.toolbar .btn{flex:1 1 auto}.header-inner{padding:13px 15px}.detail-section .kv{grid-template-columns:110px 1fr}}
 .toolbar .btn:disabled,.action:disabled{opacity:.5;cursor:wait}
 @media(min-width:751px){.toolbar{justify-content:flex-end}}
+</style><style>
+:root{color-scheme:dark;background:#090b0e;color:#edf0f3}
+body{background:#090b0e;color:#edf0f3}
+.header{background:#0d1014;border-color:#20252c}.brand-title{color:#f5f6f7}.brand-sub,.muted{color:#9aa4b1}
+.container{color:#edf0f3}.stat,.lead-card,#login{background:#12161c;border-color:#252c35;box-shadow:0 3px 14px #0005}
+.stat span,.kvkey,.lead-sub{color:#9aa4b1}.stat strong,.lead-name{color:#f5f6f7}
+.filters input,.filters select,#login input{background:#0d1117;border-color:#303844;color:#f0f2f5}
+.btn,.action{background:#1a2028;border-color:#343d49;color:#e9edf2}
+.btn-primary,.action.primary{background:#f4cf3b;border-color:#f4cf3b;color:#171717}
+.action.whatsapp{background:#123a29;border-color:#1d6844;color:#a8f0c5}
+.pill{background:#252d38;color:#c3ccd7}.pill.new{background:#4a3b0c;color:#ffe28a}.pill.picked{background:#153b5b;color:#a8d9ff}.pill.closed,.pill.yes{background:#143c28;color:#a9e8bc}.pill.no{background:#4b2d12;color:#ffd0a0}
+.details,.actions{border-color:#28303a}.detail-section{background:#0d1218}.detail-section h4{color:#f1f3f5}
+.empty{background:#12161c;border-color:#343d49;color:#9aa4b1}
+.feedback{color:#b9c3ce}.err{color:#ff8f8f}
+@media(max-width:750px){.toolbar .btn{flex:1 1 100%}}
 </style></head><body><header class="header"><div class="header-inner"><img class="brand-logo" src="img/logo.jpg" alt="" onerror="this.style.display='none'"><div><div class="brand-title">Ponto de Coleta</div><div class="brand-sub">Painel de fichas</div></div></div></header>
 <main class="container">
 <div id="login"><h2>Área administrativa</h2><p class="muted">Entre com a senha para acessar as fichas.</p><input id="pw" type="password" placeholder="Senha" autocomplete="current-password"><button class="btn btn-primary" id="go">Entrar</button><div class="err" id="e"></div></div>
 <div id="app" style="display:none">
-<div class="topbar"><div><h1>Fichas recebidas</h1><div class="muted"><span id="cnt"></span> · <span id="syncState">Sincronizando…</span> · atualização automática a cada 15 s</div></div><div class="toolbar"><button class="btn btn-primary" id="copyPending">Copiar novas e marcar Peguei</button><button class="btn" id="copyAll">Copiar todas</button><button class="btn" id="rf">↻ Atualizar</button><button class="btn" id="backup">↓ Baixar JSON</button><button class="btn" id="importBackup">↑ Importar JSON</button><button class="btn" id="out">Sair</button></div></div>
+<div class="topbar"><div><h1>Fichas recebidas</h1><div class="muted"><span id="cnt"></span> · <span id="syncState">Sincronizando…</span> · atualização automática a cada 15 s</div></div><div class="toolbar"><button class="btn btn-primary" id="copyPending">Copiar novas e marcar Peguei</button><button class="btn" id="claimYes">Pegar novas que aceitaram reunião</button><button class="btn" id="claimNo">Pegar novas que recusaram reunião</button><button class="btn" id="copyAll">Copiar todas</button><button class="btn" id="rf">↻ Atualizar</button><button class="btn" id="backup">↓ Baixar JSON</button><button class="btn" id="importBackup">↑ Importar JSON</button><button class="btn" id="out">Sair</button></div></div>
 <div class="stats"><div class="stat"><span>Total de fichas</span><strong id="statTotal">0</strong></div><div class="stat"><span>Novas</span><strong id="statNew">0</strong></div><div class="stat"><span>Aceitaram reunião</span><strong id="statYes">0</strong></div><div class="stat"><span>Orientação por telefone</span><strong id="statNo">0</strong></div></div>
 <div class="filters"><input id="search" type="search" placeholder="Buscar por nome, CNPJ, CPF, telefone…"><select id="statusFilter" aria-label="Filtrar por situação"><option value="todos">Todos os status</option><option value="novo">Novas</option><option value="contatado">Peguei</option><option value="fechado">Fechadas</option></select><select id="meetingFilter" aria-label="Filtrar reunião"><option value="todos">Todas as reuniões</option><option value="aceitou">Aceitou reunião</option><option value="nao_aceitou">Orientação por telefone</option><option value="pendente">Sem resposta</option></select></div>
 <div class="list-heading"><h2>Cadastros</h2><span class="muted" id="shown"></span></div><div id="list"></div>
@@ -105,6 +120,7 @@ function renderLeads(d){var h=$("list");h.replaceChildren();if(!d.length){h.appe
   if(st==="novo"){var pick=actions.lastChild;pick.onclick=async()=>{pick.disabled=true;try{var r=await api("PATCH","?id="+encodeURIComponent(l.id),{status:"contatado"});if(!r.ok)throw Error();l.status="contatado";stats();renderFiltered()}catch(e){alert("Não foi possível marcar a ficha. Tente novamente.");pick.disabled=false}}}
   act("Copiar ficha","secondary",async()=>{var ok=await copyText(ficha(l));$("feedback").textContent=ok?"Ficha copiada. Status mantido.":"Falha ao copiar a ficha."});
   var more=act(expanded.has(l.id)?"Ocultar detalhes":"Ver ficha","secondary",()=>{if(expanded.has(l.id))expanded.delete(l.id);else expanded.add(l.id);renderFiltered()});
+  act("Excluir ficha","danger",async()=>{if(!confirm("Excluir definitivamente a ficha de "+safe(l.nome)+"? Essa ação não pode ser desfeita."))return;try{var rr=await api("DELETE","?id="+encodeURIComponent(l.id));if(!rr.ok)throw Error();allLeads=allLeads.filter(x=>x.id!==l.id);expanded.delete(l.id);stats();renderFiltered();$("feedback").textContent="Ficha excluída."}catch(e){alert("Não foi possível excluir a ficha.")}});
   var a=node("a","action whatsapp","WhatsApp");a.href="https://wa.me/55"+dg(l.zap)+"?text="+encodeURIComponent("Olá "+safe(l.nome).split(" ")[0]+", vi seu cadastro para ser ponto de coleta.");a.target="_blank";a.rel="noopener noreferrer";actions.appendChild(a);
   c.appendChild(actions);
   if(expanded.has(l.id)){
@@ -130,6 +146,22 @@ async function load(silent=false){if(loading||!PW||document.hidden)return;loadin
  if(stamp!==lastStamp||!silent){lastStamp=stamp;renderFiltered()}
  $("syncState").textContent="Atualizado às "+new Date().toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit",second:"2-digit"});
  }catch(e){$("syncState").textContent="Sem conexão. Nova tentativa em 15 s."}finally{loading=false}}
+async function claimMeetingGroup(decision){
+ var group=allLeads.filter(l=>l.reuniao_video===decision&&(!l.status||l.status==="novo"));
+ if(!group.length){$("feedback").textContent="Não há fichas novas nesse grupo.";return}
+ var label=decision==="aceitou"?"aceitaram a reunião":"recusaram a reunião";
+ if(!confirm("Marcar "+group.length+" fichas novas de pessoas que "+label+" como Peguei? A resposta da pessoa não será alterada."))return;
+ var updated=0;
+ for(var i=0;i<group.length;i+=50){
+  var r=await api("POST","",{ids:group.slice(i,i+50).map(l=>l.id)});
+  if(!r.ok){$("feedback").textContent="Falha ao atualizar um lote. Confira as fichas antes de repetir.";await load(true);return}
+  var data=await r.json(),done=new Set(data.updated||[]);
+  allLeads.forEach(l=>{if(done.has(l.id))l.status="contatado"});updated+=done.size;
+ }
+ stats();renderFiltered();$("feedback").textContent=updated+" fichas marcadas como Peguei. As respostas de reunião foram preservadas.";
+}
+$("claimYes").onclick=()=>claimMeetingGroup("aceitou");
+$("claimNo").onclick=()=>claimMeetingGroup("nao_aceitou");
 $("copyPending").onclick=()=>copyBulk("pending");
 $("copyAll").onclick=()=>copyBulk("all");
 $("go").onclick=function(){PW=$("pw").value;sessionStorage.setItem("pw",PW);load()};
