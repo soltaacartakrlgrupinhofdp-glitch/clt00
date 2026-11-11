@@ -15,7 +15,7 @@ input{width:100%;padding:12px;border:1px solid #ddd;border-radius:6px;font-size:
 <header><img src="img/logo.jpg" style="border-radius:8px" alt="Logo do Ponto de Coleta" onerror="this.style.display='none'"> Painel de leads</header>
 <div class="w">
 <div id="login"><h2>Entrar</h2><input id="pw" type="password" placeholder="Senha" autocomplete="current-password"><button class="btn" id="go">Entrar</button><div class="err" id="e"></div></div>
-<div id="app" style="display:none"><div class="top"><span class="mut" id="cnt"></span><span><button class="btn alt" id="rf">Atualizar</button> <button class="btn g" id="backup">Baixar JSON</button> <button class="btn alt" id="importBackup">Importar JSON</button> <button class="btn alt" id="out">Sair</button></span></div><input type="file" id="jsonFile" accept=".json,application/json" style="display:none"><div class="mut" id="backupInfo" style="margin:10px 0"></div><div id="list"></div></div>
+<div id="app" style="display:none"><div class="top"><span class="mut" id="cnt"></span><span><button class="btn alt" id="rf">Atualizar</button> <button class="btn alt" id="out">Sair</button></span></div><div id="list"></div></div>
 </div>
 <script>
 var $=function(i){return document.getElementById(i)},PW=sessionStorage.getItem("pw")||"";
@@ -45,19 +45,5 @@ async function load(){var r=await api("GET");if(r.status==401){sessionStorage.re
 $("go").onclick=function(){PW=$("pw").value;sessionStorage.setItem("pw",PW);load()};
 $("pw").onkeydown=function(e){if(e.key==="Enter")$("go").click()};
 $("rf").onclick=load;$("out").onclick=function(){sessionStorage.removeItem("pw");PW="";load()};
-$("backup").onclick=async function(){
- try {var r=await fetch("/api/backup",{headers:{"x-admin-password":PW}});if(!r.ok)throw Error("Não foi possível baixar o backup ("+r.status+")");
- var blob=await r.blob(),a=document.createElement("a"),url=URL.createObjectURL(blob);a.href=url;a.download="fichas-coleta-"+new Date().toISOString().slice(0,10)+".json";a.click();setTimeout(function(){URL.revokeObjectURL(url)},1000);$("backupInfo").textContent="Backup baixado. Guarde o arquivo em local privado e protegido.";
- }catch(e){$("backupInfo").textContent=e.message}
-};
-$("importBackup").onclick=function(){$("jsonFile").click()};
-$("jsonFile").onchange=async function(){var file=this.files&&this.files[0];if(!file)return;
- try {if(file.size>3*1024*1024)throw Error("Arquivo grande demais. Divida em lotes menores.");var obj=JSON.parse(await file.text());if(obj.format!=="coleta-fichas-v1"||!Array.isArray(obj.leads))throw Error("Backup JSON inválido.");
- if(!confirm("Importar "+obj.leads.length+" fichas? CPF ou CNPJ repetidos serão ignorados."))return;
- var totals={imported:0,duplicates:0,invalid:0};$("backupInfo").textContent="Importando...";
- for(var i=0;i<obj.leads.length;i+=100){var r=await fetch("/api/backup",{method:"POST",headers:{"Content-Type":"application/json","x-admin-password":PW},body:JSON.stringify({format:"coleta-fichas-v1",leads:obj.leads.slice(i,i+100)})});var d=await r.json();if(!r.ok)throw Error("Falha na importação ("+r.status+"). Já importadas: "+totals.imported);Object.keys(totals).forEach(k=>totals[k]+=d[k]||0)}
- $("backupInfo").textContent="Importadas: "+totals.imported+" | Repetidas: "+totals.duplicates+" | Inválidas: "+totals.invalid;await load();
- }catch(e){$("backupInfo").textContent=e.message}finally{this.value=""}
-};
 if(PW)load();
 </script></body></html>
