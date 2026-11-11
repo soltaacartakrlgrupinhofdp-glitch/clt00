@@ -10,9 +10,10 @@ module.exports = async (req, res) => {
   const d = {
     nome: L(b.nome, 120), cpf: L(b.cpf, 14), cnpj: L(b.cnpj, 18), fant: L(b.fant, 120),
     cid: L(b.cid, 80), seg: L(b.seg, 150), m2: L(b.m2, 40), fat: L(b.fat, 40),
-    zap: L(b.zap, 16), mail: L(b.mail, 120), quiz: L(b.quiz, 1200)
+    zap: L(b.zap, 16), mail: L(b.mail, 120), quiz: L(b.quiz, 1200), bancos: Array.isArray(b.bancos) ? b.bancos.slice(0, 3).map(x => L(x, 60)) : [],
+    dispositivo: L(b.dispositivo, 40), horario: L(b.horario, 80)
   };
-  if (!b.consent || !d.nome || !cpfApi.valid(d.cpf) || d.cnpj.replace(/\D/g, '').length !== 14 || d.zap.replace(/\D/g, '').length < 10)
+  if (!b.consent || !d.nome || !cpfApi.valid(d.cpf) || d.cnpj.replace(/\D/g, '').length !== 14 || d.zap.replace(/\D/g, '').length < 10 || !d.bancos.length || !d.dispositivo || !d.horario)
     return res.status(400).json({ error: 'invalid' });
   const j = await consulta(d.cnpj.replace(/\D/g, ''));
   if (j) {

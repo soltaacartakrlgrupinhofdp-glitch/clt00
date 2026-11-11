@@ -38,7 +38,7 @@ input,select{width:100%;padding:12px;border:1px solid #ddd;border-radius:6px;fon
 .opt{display:block;width:100%;text-align:left;background:#f5f5f5;color:#333;border:2px solid transparent;border-radius:10px;padding:14px;margin:10px 0;font-size:15px;cursor:pointer}.opt:hover{border-color:#3483fa}
 .pb{height:6px;background:#eee;border-radius:9px;overflow:hidden;margin-bottom:16px}.pb i{display:block;height:100%;background:#ffe600;width:0;transition:width .3s}
 .chk{display:flex;gap:10px;font-weight:400;font-size:13px;align-items:flex-start}.chk input{width:auto;margin-top:4px}
-.err{color:#d93025;font-size:13px;min-height:18px}.hide{display:none}.hp{position:absolute;left:-9999px}
+.choice{display:flex;align-items:center;gap:10px;padding:12px;border:1px solid #ddd;border-radius:10px;margin:8px 0;font-weight:500}.choice input{width:auto;accent-color:#3483fa}.stepnote{color:#666;font-size:14px}.stepcount{font-size:12px;color:#777;font-weight:700;letter-spacing:.08em}.err{color:#d93025;font-size:13px;min-height:18px}.hide{display:none}.hp{position:absolute;left:-9999px}
 body{padding-bottom:96px}
 .sticky{position:fixed;left:0;right:0;bottom:0;z-index:20;background:#fff;box-shadow:0 -2px 14px rgba(0,0,0,.12);padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px))}.sticky>*{max-width:520px;margin-left:auto;margin-right:auto}.sticky .err{text-align:center;min-height:0;margin-bottom:6px}
 #ld{position:fixed;inset:0;z-index:50;background:rgba(255,255,255,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;font-weight:600;color:#333}#ld.hide{display:none}.spin{width:56px;height:56px;border:6px solid #ffe600;border-top-color:#3483fa;border-radius:50%;animation:sp .8s linear infinite}@keyframes sp{to{transform:rotate(360deg)}}
@@ -114,13 +114,19 @@ fbq('track','PageView');
 <div class="sticky"><div class="err" id="err"></div><button class="btn" id="send">Enviar cadastro</button></div>
 </section>
 
+<section id="qualS" class="hide">
+<div class="bar"></div><p class="stepcount" id="qualStep" style="text-align:center">ETAPA 1 DE 3</p>
+<h2 id="qualTitle">Pronto, você está quase lá!</h2><p class="sub" id="qualIntro">Para entendermos melhor a operação do seu estabelecimento, responda mais algumas perguntas.</p>
+<div class="card"><div class="pb"><i id="qualProgress"></i></div><div id="qualBody"></div><div class="err" id="qualErr"></div></div>
+<div class="sticky"><button class="btn" id="qualNext">Continuar</button></div>
+</section>
 <section id="done" class="hide"><div class="card" style="text-align:center;margin-top:26px"><div style="font-size:48px">✅</div><h2 style="margin-top:6px">Cadastro recebido!</h2>
-<p>Agora é só falar com a nossa equipe pelo WhatsApp para os próximos passos.</p>
-<div class="ins" style="text-align:left;margin-top:18px">Nossa equipe entrará em contato para explicar as próximas etapas e verificar a disponibilidade do serviço na sua região.</div>
+<p>Sua ficha foi recebida. A equipe responsável poderá entrar em contato no horário de sua preferência ou em um horário próximo, conforme disponibilidade.</p>
+<div class="ins" style="text-align:left;margin-top:18px">Agora é só aguardar! Evite preencher o cadastro novamente: duplicidades podem atrasar a análise. O envio não garante aprovação. Caso seu estabelecimento avance, o suporte orientará a instalação e o uso do aplicativo necessário para bipagem dos pacotes.</div>
 <img src="/img/banner.png" alt="Informações sobre o ponto de coleta" loading="lazy" style="display:block;width:100%;height:auto;border-radius:16px;margin-top:16px" onerror="this.style.display='none'">
 
 </div>
-<div class="sticky"><a class="btn wa" id="wa" target="_blank" rel="noopener">Falar no WhatsApp</a></div></section>
+</section>
 
 </div>
 <footer>Página oficial de cadastro de interesse em pontos de coleta.</footer>
@@ -128,7 +134,7 @@ fbq('track','PageView');
 <script>
 var WA_NUMBER="5511982072072"; // TROQUE pelo seu WhatsApp: 55 + DDD + número, só dígitos
 var $=function(i){return document.getElementById(i)};
-var views=["quiz","result","formS","done"];
+var views=["quiz","result","formS","qualS","done"];
 function show(v){views.forEach(function(x){$(x).classList.toggle("hide",x!==v)});window.scrollTo(0,0)}
 
 var Q=[{t:"Quantos clientes entram na sua loja por dia?",o:["Menos de 20","20 a 50","50 a 100","Mais de 100"],i:"Cada pessoa que vem buscar ou devolver um pacote é um visitante a mais dentro da sua loja."},
@@ -180,19 +186,29 @@ if(!edited.cid&&r.cidade)$("cid").value=cap(r.cidade)+"/"+r.uf;
 if(!edited.seg&&r.atividade)$("seg").value=r.atividade;
 }catch(e){}});
 
+var cadastro=null, qualStep=0, qualData={bancos:[],dispositivo:"",horario:""};
+var bankOptions=["Banco do Brasil","Bradesco","Caixa Econômica","Itaú","Santander","Nubank","Inter","C6 Bank","Mercado Pago","PagBank","Sicredi","Sicoob","BTG Pactual","Outro","Prefiro não informar"];
+function loadingFor(ms,phrases){return new Promise(function(resolve){var i=0;$("ld").classList.remove("hide");$("ldt").textContent=phrases[0];var timer=setInterval(function(){i=Math.min(i+1,phrases.length-1);$("ldt").textContent=phrases[i]},Math.max(700,ms/phrases.length));setTimeout(function(){clearInterval(timer);$("ld").classList.add("hide");resolve()},ms)})}
+function renderQual(){show("qualS");$("qualStep").textContent="ETAPA "+(qualStep+1)+" DE 3";$("qualProgress").style.width=((qualStep+1)/3*100)+"%";$("qualErr").textContent="";var body=$("qualBody");body.innerHTML="";
+var title=["Pronto, você está quase lá!","Como você trabalha hoje?","Qual o melhor horário para contato?"];
+var intro=["Para entendermos melhor a operação, conte quais bancos você mais utiliza.","Precisamos conhecer o dispositivo disponível para orientar a instalação do aplicativo de bipagem.","Escolha o período em que prefere receber orientações caso sua ficha avance na análise."];
+$("qualTitle").textContent=title[qualStep];$("qualIntro").textContent=intro[qualStep];$("qualNext").textContent=qualStep===2?"Finalizar e enviar ficha":"Continuar";
+if(qualStep===0){var h=document.createElement("h3");h.textContent="Quais são os até 3 bancos que você mais usa hoje?";body.appendChild(h);var p=document.createElement("p");p.className="stepnote";p.textContent="Selecione até três opções. A informação é usada apenas para conhecer sua operação; não garante benefícios financeiros ou parcerias bancárias.";body.appendChild(p);bankOptions.forEach(function(bank){var lab=document.createElement("label");lab.className="choice";var inp=document.createElement("input");inp.type="checkbox";inp.checked=qualData.bancos.includes(bank);inp.onchange=function(){if(inp.checked){if(bank==="Prefiro não informar")qualData.bancos=[];else qualData.bancos=qualData.bancos.filter(x=>x!=="Prefiro não informar");if(qualData.bancos.length>=3&&bank!=="Prefiro não informar"){inp.checked=false;$("qualErr").textContent="Escolha no máximo três bancos.";return}qualData.bancos.push(bank)}else qualData.bancos=qualData.bancos.filter(x=>x!==bank);renderQual()};lab.append(inp,document.createTextNode(bank));body.appendChild(lab)})}
+if(qualStep===1){var h=document.createElement("h3");h.textContent="Qual dispositivo será usado na operação?";body.appendChild(h);["Android","iOS (iPhone/iPad)","Computador"].forEach(function(v){var lab=document.createElement("label");lab.className="choice";var inp=document.createElement("input");inp.type="radio";inp.name="device";inp.checked=qualData.dispositivo===v;inp.onchange=function(){qualData.dispositivo=v};lab.append(inp,document.createTextNode(v));body.appendChild(lab)});var info=document.createElement("div");info.className="ins";info.textContent="O aplicativo ou sistema de bipagem compatível é necessário para a operação. Se a candidatura avançar, o suporte entrará em contato para orientar os requisitos, instalação e configuração.";body.appendChild(info)}
+if(qualStep===2){var h=document.createElement("h3");h.textContent="Quando podemos entrar em contato?";body.appendChild(h);var sel=document.createElement("select");sel.id="horarioEscolhido";["Selecione um período","Manhã (8h às 12h)","Tarde (12h às 17h)","Noite (17h às 20h)","Qualquer horário comercial"].forEach(function(v,i){var opt=document.createElement("option");opt.value=i?v:"";opt.textContent=v;sel.appendChild(opt)});sel.value=qualData.horario;sel.onchange=function(){qualData.horario=sel.value};body.appendChild(sel);var p=document.createElement("div");p.className="ins";p.textContent="Este é um horário de preferência, não um agendamento confirmado. A equipe poderá entrar em contato nesse período ou em horário próximo, conforme disponibilidade e andamento da análise.";body.appendChild(p)}
+}
+$("qualNext").onclick=async function(){if(qualStep===0&&!qualData.bancos.length){$("qualErr").textContent="Selecione ao menos uma opção.";return}if(qualStep===1&&!qualData.dispositivo){$("qualErr").textContent="Selecione o dispositivo.";return}if(qualStep===2&&!qualData.horario){$("qualErr").textContent="Escolha o horário de preferência.";return}if(qualStep<2){qualStep++;renderQual();return}
+var btn=$("qualNext");btn.disabled=true;var payload=Object.assign({},cadastro,qualData);
+$("ld").classList.remove("hide");$("ldt").textContent="Enviando ficha completa com segurança...";
+try{var r=await fetch("/api/lead",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});var j=await r.json().catch(()=>({}));if(!r.ok)throw {c:r.status,e:j.error};
+try{if(typeof window.fbq==="function")window.fbq("track","Lead",{content_name:"Cadastro ponto de coleta"})}catch(e){}
+try{if(window.ttq&&typeof window.ttq.track==="function")window.ttq.track("Lead",{content_name:"Cadastro ponto de coleta"})}catch(e){}
+$("ld").classList.add("hide");show("done")}
+catch(x){$("ld").classList.add("hide");btn.disabled=false;$("qualErr").textContent=x.e==="db"?"Não foi possível acessar o banco de dados. Verifique a configuração na Vercel.":x.e==="duplicate"?"Já existe uma ficha com este CNPJ. Aguarde o contato da equipe.":x.e==="inativo"?"CNPJ inativo. Confira os dados.":"Não foi possível enviar a ficha. Tente novamente."}};
 $("send").onclick=async function(){
 var l={nome:$("nome").value.trim(),cpf:$("cpf").value,cnpj:$("cnpj").value,fant:$("fant").value.trim(),cid:$("cid").value.trim(),seg:$("seg").value,m2:$("m2").value,fat:$("fat").value,zap:$("zap").value,mail:$("mail").value.trim(),quiz:ans.join(" | "),website:$("website").value,consent:$("ok").checked},e="";
-if(l.nome.split(" ").length<2)e="Informe o nome completo.";else if(!vCPF(l.cpf))e="CPF inválido.";else if(!vCNPJ(l.cnpj))e="CNPJ inválido.";else if(cnpjAtivo===false)e="Este CNPJ não está ativo na Receita. É necessário CNPJ ativo para participar.";else if(!l.fant||!l.cid||!l.seg||!l.m2||!l.fat)e="Preencha todos os campos.";else if(dg(l.zap).length<10)e="WhatsApp inválido.";else if(!l.consent)e="É necessário autorizar o contato.";
-$("err").textContent=e;if(e)return;
-$("send").disabled=true;var t0=Date.now();startLoad();
-try{var r=await fetch("/api/lead",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(l)});
-if(!r.ok){var j={};try{j=await r.json()}catch(z){}throw {c:r.status,e:j.error}}
-var msg="Olá! Acabei de enviar meu cadastro para ser ponto de coleta.\nNome: "+l.nome+"\nNegócio: "+l.fant+"\nCNPJ: "+l.cnpj;
-$("wa").href="https://wa.me/"+WA_NUMBER+"?text="+encodeURIComponent(msg);
-// Lead no Meta Pixel: só depois que o cadastro foi salvo. Sem enviar CPF, CNPJ, telefone ou outros dados pessoais.
-try{if(typeof window.fbq==="function")window.fbq("track","Lead",{content_name:"Cadastro ponto de coleta"})}catch(z){}
-// TikTok Lead: apenas apos confirmacao do cadastro pelo servidor.
-try{if(window.ttq && typeof window.ttq.track==="function")window.ttq.track("Lead",{content_name:"Cadastro ponto de coleta"})}catch(z){}
-await new Promise(function(z){setTimeout(z,Math.max(0,2600-(Date.now()-t0)))});stopLoad();show("done")}
-catch(x){stopLoad();$("send").disabled=false;var m="Não foi possível enviar. Tente novamente.";if(x&&x.c===404)m="Erro 404: o envio só funciona no site publicado na Vercel.";else if(x&&x.e==="db")m="Erro de banco de dados: conecte o Upstash na aba Storage da Vercel e faça Redeploy.";else if(x&&x.e==="inativo")m="Este CNPJ não está ativo na Receita. É necessário CNPJ ativo para participar.";else if(x&&x.c)m="Erro "+x.c+". Verifique o cadastro e tente novamente.";$("err").textContent=m}};
+if(l.nome.split(" ").length<2)e="Informe o nome completo.";else if(!vCPF(l.cpf))e="CPF inválido.";else if(!vCNPJ(l.cnpj))e="CNPJ inválido.";else if(cnpjAtivo===false)e="Este CNPJ não está ativo na Receita.";else if(!l.fant||!l.cid||!l.seg||!l.m2||!l.fat)e="Preencha todos os campos.";else if(dg(l.zap).length<10)e="WhatsApp inválido.";else if(!l.consent)e="É necessário autorizar o contato.";
+$("err").textContent=e;if(e)return;cadastro=l;$("send").disabled=true;
+await loadingFor(2800,["Conferindo os dados preenchidos...","Preparando as perguntas da operação...","Pronto! Você está quase lá."]);qualStep=0;renderQual();$("send").disabled=false;
+};
 </script></body></html>
