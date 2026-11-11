@@ -12,6 +12,31 @@ module.exports = async (req, res) => {
       out.sort((a, b) => (a.created_at < b.created_at ? 1 : -1));
       return res.status(200).json(out);
     }
+    if (req.method === 'POST') {
+      const b = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
+      const ids = b.ids;
+      if (!Array.isArray(ids) || ids.length < 1 || ids.length > 50 ||
+          ids.some(x => typeof x !== 'string' || !/^[a-zA-Z0-9-]{1,100}$/.test(x)) ||
+          new Set(ids).size !== ids.length) {
+        return res.status(400).json({ error: 'ids_invalidos' });
+      }
+      // Atomicamente marca somente fichas ainda novas; preserva dados atualizados por outros operadores.
+      const lua = `local updated = {}
+for i=1,#ARGV do
+  local raw = redis.call('HGET', KEYS[1], ARGV[i])
+  if raw then
+    local ok, lead = pcall(cjson.decode, raw)
+    if ok and type(lead)=='table' and (lead.status==nil or lead.status=='novo') then
+      lead.status='contatado'
+      redis.call('HSET', KEYS[1], ARGV[i], cjson.encode(lead))
+      table.insert(updated, ARGV[i])
+    end
+  end
+end
+return updated`;
+      const updated = await db(['EVAL', lua, 1, 'leads', ...ids]);
+      return res.status(200).json({ updated: updated || [] });
+    }
     if (!id) return res.status(400).json({ error: 'id' });
     if (req.method === 'PATCH') {
       const b = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;

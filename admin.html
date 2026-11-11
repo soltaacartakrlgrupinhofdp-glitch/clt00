@@ -1,23 +1,29 @@
-<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Admin – Leads</title>
-<style>
-*{box-sizing:border-box}body{margin:0;background:#fff;color:#333;font-family:"Proxima Nova",system-ui,Arial,sans-serif}
-header{background:#ffe600;padding:12px 20px;display:flex;align-items:center;gap:10px;font-weight:700}header img{height:34px}
-.w{max-width:640px;margin:0 auto;padding:20px}
-input{width:100%;padding:12px;border:1px solid #ddd;border-radius:6px;font-size:16px;margin-bottom:10px}
-.btn{border:0;border-radius:6px;background:#3483fa;color:#fff;font-weight:600;padding:11px 14px;cursor:pointer;font-size:14px;text-decoration:none;display:inline-block}
-.btn.alt{background:#e3edfb;color:#3483fa}.btn.g{background:#00a650}.btn.r{background:#fff;color:#d93025;border:1px solid #f3c2bd}
-.card{border:1px solid #eee;border-radius:14px;padding:18px;margin:14px 0;box-shadow:0 2px 10px rgba(0,0,0,.06)}
-.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}.n{font-weight:700;font-size:17px}
-.tag{font-size:12px;border-radius:99px;padding:3px 10px;font-weight:700;background:#ffe600}.tag.contatado{background:#d6e8ff}.tag.fechado{background:#c9f0d8}
-.r1{font-size:14px;margin:3px 0}.r1 b{display:inline-block;min-width:100px;color:#777;font-weight:600}
-.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.err{color:#d93025;font-size:14px}.mut{color:#777;font-size:13px}
-</style></head><body>
-<header><img src="img/logo.jpg" style="border-radius:8px" alt="Logo do Ponto de Coleta" onerror="this.style.display='none'"> Painel de leads</header>
-<div class="w">
-<div id="login"><h2>Entrar</h2><input id="pw" type="password" placeholder="Senha" autocomplete="current-password"><button class="btn" id="go">Entrar</button><div class="err" id="e"></div></div>
-<div id="app" style="display:none"><div class="top"><span class="mut" id="cnt"></span><span><button class="btn alt" id="rf">Atualizar</button> <button class="btn alt" id="out">Sair</button></span></div><label for="meetingFilter">Filtrar resposta da reunião</label><select id="meetingFilter"><option value="todos">Todas as fichas</option><option value="aceitou">Aceitou reunião</option><option value="nao_aceitou">Não aceitou — telefone</option><option value="pendente">Sem resposta registrada</option></select><div id="list"></div></div>
-</div>
-<script>
+<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Painel de Fichas — Ponto de Coleta</title><style>
+:root{font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;color:#1d2430;background:#f6f7fa}
+*{box-sizing:border-box}body{margin:0;background:#f6f7fa;color:#1d2430}button,input,select{font:inherit}
+.header{background:#fff;border-bottom:1px solid #e8ebf0;position:sticky;top:0;z-index:10}.header-inner{max-width:1220px;margin:auto;padding:16px 24px;display:flex;align-items:center;gap:12px}.brand-logo{height:38px;width:38px;object-fit:cover;border-radius:11px}.brand-title{font-weight:800;font-size:17px}.brand-sub{color:#77808e;font-size:12px}
+.container{max-width:1220px;margin:auto;padding:24px}.topbar{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:18px}.topbar h1{font-size:clamp(23px,4vw,30px);margin:0 0 5px}.muted{color:#77808e;font-size:13px}
+.btn{border:1px solid #e0e4ea;background:#fff;color:#333;border-radius:11px;padding:11px 15px;cursor:pointer;font-size:13px;font-weight:700}.btn:hover,.action:hover{filter:brightness(.97)}.btn-primary{background:#f6d53c;border-color:#f6d53c;color:#242424}.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:18px 0}.stat{background:#fff;border:1px solid #e8ebf0;border-radius:16px;padding:17px}.stat strong{display:block;font-size:27px;letter-spacing:-1px;margin-top:6px}.stat span{color:#747d8a;font-size:12px}
+.filters{display:grid;grid-template-columns:minmax(220px,1fr) minmax(150px,200px) minmax(160px,210px);gap:10px;margin:18px 0}.filters input,.filters select{width:100%;background:white;border:1px solid #e1e5ec;border-radius:12px;padding:13px;color:#333;min-width:0}
+.list-heading{display:flex;align-items:center;justify-content:space-between;margin:18px 0 12px}.list-heading h2{font-size:17px;margin:0}
+.lead-card{background:#fff;border:1px solid #e8ebf0;border-radius:16px;margin-bottom:10px;padding:18px;box-shadow:0 2px 9px #1c253006}.lead-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.lead-name{font-size:16px;font-weight:800}.lead-sub{color:#77808e;font-size:13px;margin-top:5px}.chips{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:6px}.pill{font-size:11px;font-weight:700;border-radius:30px;padding:6px 9px;white-space:nowrap;background:#f1f3f6;color:#647080}.pill.new{background:#fff5d0;color:#886800}.pill.picked{background:#e2f0ff;color:#24649b}.pill.closed,.pill.yes{background:#e2f6e8;color:#227a42}.pill.no{background:#fff0e1;color:#9c5917}
+.lead-meta{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:16px 0}.kv{min-width:0}.kvkey{display:block;color:#87909b;font-size:11px;margin-bottom:4px}.kvvalue{font-size:13px;font-weight:650;overflow-wrap:anywhere}
+.actions,.detail-actions{display:flex;gap:8px;flex-wrap:wrap;border-top:1px solid #f0f1f4;padding-top:13px}.action{border:1px solid #e5e8ee;border-radius:9px;background:#fff;padding:9px 13px;font-size:12px;font-weight:750;cursor:pointer;text-decoration:none;color:#384150}.action.primary{background:#f5cf34;border-color:#f5cf34;color:#2c2c2c}.action.whatsapp{color:#167a49;background:#e9f8ee;border-color:#e9f8ee}.action.danger{color:#bb4040}.details{border-top:1px solid #edf0f3;margin-top:15px;padding-top:14px}.detail-section{margin:12px 0;padding:13px;background:#f8f9fb;border-radius:12px}.detail-section h4{margin:0 0 10px;font-size:13px}.detail-section .kv{display:grid;grid-template-columns:140px 1fr;gap:8px;padding:5px 0}.detail-section .kvkey{margin:0}.detail-actions{border:0}.empty{background:white;border:1px dashed #dfe3e9;border-radius:15px;text-align:center;padding:35px;color:#77808e}
+#login{max-width:420px;background:white;border:1px solid #e8ebf0;border-radius:18px;margin:65px auto;padding:28px}#login input{width:100%;padding:13px;border:1px solid #e2e5eb;border-radius:10px;margin:12px 0}.err{color:#b42f2f;font-size:13px}.feedback{min-height:16px;color:#67727d;font-size:12px;margin:7px 0}
+@media(max-width:750px){.container{padding:15px}.stats{grid-template-columns:repeat(2,1fr)}.filters{grid-template-columns:1fr}.lead-head{display:block}.chips{justify-content:flex-start;margin-top:10px}.lead-meta{grid-template-columns:1fr 1fr}.toolbar{width:100%}.toolbar .btn{flex:1 1 auto}.header-inner{padding:13px 15px}.detail-section .kv{grid-template-columns:110px 1fr}}
+.toolbar .btn:disabled,.action:disabled{opacity:.5;cursor:wait}
+@media(min-width:751px){.toolbar{justify-content:flex-end}}
+</style></head><body><header class="header"><div class="header-inner"><img class="brand-logo" src="img/logo.jpg" alt="" onerror="this.style.display='none'"><div><div class="brand-title">Ponto de Coleta</div><div class="brand-sub">Painel de fichas</div></div></div></header>
+<main class="container">
+<div id="login"><h2>Área administrativa</h2><p class="muted">Entre com a senha para acessar as fichas.</p><input id="pw" type="password" placeholder="Senha" autocomplete="current-password"><button class="btn btn-primary" id="go">Entrar</button><div class="err" id="e"></div></div>
+<div id="app" style="display:none">
+<div class="topbar"><div><h1>Fichas recebidas</h1><div class="muted"><span id="cnt"></span> · <span id="syncState">Sincronizando…</span> · atualização automática a cada 15 s</div></div><div class="toolbar"><button class="btn btn-primary" id="copyPending">Copiar novas e marcar Peguei</button><button class="btn" id="copyAll">Copiar todas</button><button class="btn" id="rf">↻ Atualizar</button><button class="btn" id="backup">↓ Baixar JSON</button><button class="btn" id="importBackup">↑ Importar JSON</button><button class="btn" id="out">Sair</button></div></div>
+<div class="stats"><div class="stat"><span>Total de fichas</span><strong id="statTotal">0</strong></div><div class="stat"><span>Novas</span><strong id="statNew">0</strong></div><div class="stat"><span>Aceitaram reunião</span><strong id="statYes">0</strong></div><div class="stat"><span>Orientação por telefone</span><strong id="statNo">0</strong></div></div>
+<div class="filters"><input id="search" type="search" placeholder="Buscar por nome, CNPJ, CPF, telefone…"><select id="statusFilter" aria-label="Filtrar por situação"><option value="todos">Todos os status</option><option value="novo">Novas</option><option value="contatado">Peguei</option><option value="fechado">Fechadas</option></select><select id="meetingFilter" aria-label="Filtrar reunião"><option value="todos">Todas as reuniões</option><option value="aceitou">Aceitou reunião</option><option value="nao_aceitou">Orientação por telefone</option><option value="pendente">Sem resposta</option></select></div>
+<div class="list-heading"><h2>Cadastros</h2><span class="muted" id="shown"></span></div><div id="list"></div>
+<input type="file" id="jsonFile" accept=".json,application/json" hidden><div class="feedback" id="backupInfo"></div><div class="feedback" id="feedback" role="status" aria-live="polite"></div>
+</div></main><script>
 var $=function(i){return document.getElementById(i)},PW=sessionStorage.getItem("pw")||"";
 function api(m,q,b){return fetch("/api/leads"+(q||""),{method:m,headers:{"x-admin-password":PW,"Content-Type":"application/json"},body:b?JSON.stringify(b):undefined})}
 function dg(s){return String(s||"").replace(/\D/g,"")}
@@ -25,30 +31,127 @@ function dados(D){return [["Razão social",D.razao],["Natureza jurídica",D.natu
 function dadosCPF(d){return [["Status CPF",d.status],["Nome CPF",d.nome],["Nome da mãe",d.nome_mae],["Nascimento",d.data_nascimento],["Idade",d.idade==null?"":d.idade+" anos"],["Aniversário",d.aniversario],["Sexo",d.sexo]].filter(x=>x[1]!==undefined&&x[1]!==null&&x[1]!=="")}
 function qualificacao(l){var q=l.qualificacao||{};return {bancos:Array.isArray(l.bancos)?l.bancos:(q.bancos||[]),dispositivo:l.dispositivo||q.dispositivo||"",horario:l.horario||q.horario||""}}
 function ficha(l){var q=qualificacao(l);return "FICHA – PONTO DE COLETA\nNome: "+l.nome+"\nCPF: "+l.cpf+"\nCNPJ: "+l.cnpj+"\nNegócio: "+l.fant+"\nCidade/UF: "+l.cid+"\nSegmento: "+l.seg+"\nEspaço: "+l.m2+"\nFaturamento: "+l.fat+"\nWhatsApp: "+l.zap+"\nE-mail: "+(l.mail||"-")+"\nBancos utilizados: "+q.bancos.join(", ")+"\nDispositivo: "+(q.dispositivo||"-")+"\nHorário preferido: "+(q.horario||"-")+"\nReunião por vídeo: "+meetingLabel(l)+"\nQUIZ:\n"+(l.quiz?String(l.quiz).split(" | ").join("\n"):"-")+(l.cpf_dados?"\n--- DADOS CPF ---\n"+dadosCPF(l.cpf_dados).map(x=>x[0]+": "+x[1]).join("\n"):"")+(l.cnpj_dados?"\n--- DADOS DA RECEITA ---\n"+dados(l.cnpj_dados).map(function(x){return x[0]+": "+x[1]}).join("\n"):"")+"\nData: "+new Date(l.created_at).toLocaleString("pt-BR")}
+async function copyText(text){
+  if(navigator.clipboard && window.isSecureContext){
+    try {await navigator.clipboard.writeText(text);return true} catch(e){}
+  }
+  var t=document.createElement("textarea");t.value=text;t.setAttribute("readonly","");
+  t.style.cssText="position:fixed;left:-9999px;top:0";document.body.appendChild(t);
+  t.focus();t.select();var ok=false;
+  try{ok=document.execCommand("copy")}catch(e){}
+  t.remove();return ok;
+}
+function bulkText(leads){return leads.map((l,i)=>"FICHA "+(i+1)+" DE "+leads.length+"\\n"+ficha(l)).join("\\n\\n"+"=".repeat(45)+"\\n\\n")}
+var bulkBusy=false;
+async function copyBulk(mode){
+ if(bulkBusy)return;
+ var pending=allLeads.filter(l=>!l.status||l.status==="novo");
+ var selected=mode==="pending"?pending:allLeads;
+ if(!selected.length){$("feedback").textContent=mode==="pending"?"Nenhuma ficha nova para copiar.":"Não há fichas para copiar.";return}
+ if(mode==="pending"&&!confirm("Copiar "+selected.length+" fichas novas e marcar como Peguei? Primeiro copiaremos o texto. Só depois de copiar com sucesso as fichas serão marcadas."))return;
+ bulkBusy=true;var b=$("copyPending"),a=$("copyAll");b.disabled=true;a.disabled=true;
+ try{
+  var copied=await copyText(bulkText(selected));
+  if(!copied){$("feedback").textContent="Não foi possível copiar. Nenhuma ficha foi marcada. Tente usar o navegador em HTTPS.";return}
+  if(mode==="all"){$("feedback").textContent=selected.length+" fichas copiadas. Nenhum status foi alterado.";return}
+  $("feedback").textContent="Copiadas "+selected.length+" fichas. Marcando como Peguei…";
+  var updated=0,failed=0;
+  for(var i=0;i<selected.length;i+=50){
+    var chunk=selected.slice(i,i+50);
+    try{
+      var r=await api("POST","",{ids:chunk.map(l=>l.id)});
+      if(!r.ok)throw Error("HTTP "+r.status);
+      var data=await r.json(),done=new Set(data.updated||[]);
+      allLeads.forEach(l=>{if(done.has(l.id))l.status="contatado"});
+      updated+=done.size;
+    }catch(e){failed+=chunk.length}
+    stats();renderFiltered();
+    $("feedback").textContent="Fichas copiadas: "+selected.length+" | Marcadas Peguei: "+updated+" | Lotes com erro: "+failed;
+  }
+  $("feedback").textContent="Copiadas "+selected.length+" fichas. "+updated+" marcadas Peguei."+(failed?" Atenção: "+failed+" fichas não puderam ser atualizadas; confira os status antes de repetir.":"")+(selected.length-updated-failed?" Algumas já haviam sido pegas por outro operador.":"");
+  await load(true);
+ }finally{bulkBusy=false;b.disabled=false;a.disabled=false}
+}
 function meetingLabel(l){return l.reuniao_video==="aceitou"?"Aceitou reunião por vídeo":l.reuniao_video==="nao_aceitou"?"Não aceitou — orientação por telefone":"Sem resposta registrada"}
-var allLeads=[];
-function renderFiltered(){var v=$("meetingFilter").value;renderLeads(allLeads.filter(l=>v==="todos"||(v==="pendente"?!l.reuniao_video:l.reuniao_video===v)))}
-$("meetingFilter").onchange=renderFiltered;
-async function load(){var r=await api("GET");if(r.status==401){sessionStorage.removeItem("pw");$("login").style.display="block";$("app").style.display="none";$("e").textContent=PW?"Senha incorreta.":"";return}
- var d=await r.json();allLeads=d;$("login").style.display="none";$("app").style.display="block";$("cnt").textContent=d.length+" lead(s)";renderFiltered()}
-function renderLeads(d){var h=$("list");h.innerHTML="";
- d.forEach(function(l,i){var c=document.createElement("div");c.className="card";
-  var t=document.createElement("div");t.className="top";var n=document.createElement("span");n.className="n";n.textContent="#"+(d.length-i)+" · "+l.nome;var g=document.createElement("span");g.className="tag "+l.status;g.textContent=l.status;t.appendChild(n);t.appendChild(g);c.appendChild(t);
-  var q=qualificacao(l);
-  [["CPF",l.cpf],["CNPJ",l.cnpj],["Negócio",l.fant],["Cidade",l.cid],["Segmento",l.seg],["Espaço",l.m2],["Faturamento",l.fat],["WhatsApp",l.zap],["E-mail",l.mail||"-"],["Bancos utilizados",q.bancos.join(", ")||"-"],["Dispositivo / sistema",q.dispositivo||"-"],["Horário preferido",q.horario||"-"],["Reunião por vídeo",meetingLabel(l)],["Recebido",new Date(l.created_at).toLocaleString("pt-BR")]].forEach(function(x){var p=document.createElement("div");p.className="r1";var b=document.createElement("b");b.textContent=x[0];p.appendChild(b);p.appendChild(document.createTextNode(x[1]));c.appendChild(p)});
-  if(l.quiz){var qv=document.createElement("div");qv.style.cssText="background:#fffbd1;border-radius:10px;padding:10px 12px;margin-top:10px";var qh=document.createElement("div");qh.style.cssText="font-weight:700;margin-bottom:4px";qh.textContent="Respostas do quiz";qv.appendChild(qh);String(l.quiz).split(" | ").forEach(function(x){var p=document.createElement("div");p.className="r1";p.textContent=x;qv.appendChild(p)});c.appendChild(qv)}
-  if(l.cpf_dados){var cv=document.createElement("div");cv.className="card";var ch=document.createElement("strong");ch.textContent="Consulta CPF (somente admin)";cv.appendChild(ch);dadosCPF(l.cpf_dados).forEach(function(x){var rr=document.createElement("div");rr.className="r1";var bb=document.createElement("b");bb.textContent=x[0];rr.appendChild(bb);rr.appendChild(document.createTextNode(String(x[1])));cv.appendChild(rr)});c.appendChild(cv)}
-  if(l.cnpj_dados){var dv=document.createElement("div");dv.style.cssText="background:#f7f7f7;border-radius:10px;padding:10px 12px;margin-top:10px";var ht=document.createElement("div");ht.style.cssText="font-weight:700;margin-bottom:4px";ht.textContent="Dados da Receita (CNPJ)";dv.appendChild(ht);dados(l.cnpj_dados).forEach(function(x){var p=document.createElement("div");p.className="r1";var b=document.createElement("b");b.textContent=x[0];p.appendChild(b);p.appendChild(document.createTextNode(x[1]));dv.appendChild(p)});c.appendChild(dv)}
-  var w=document.createElement("div");w.className="row";
-  function B(tx,cls,fn){var b=document.createElement("button");b.className="btn "+cls;b.textContent=tx;b.onclick=fn;w.appendChild(b)}
-  B("Copiar ficha","",async function(e){try{await navigator.clipboard.writeText(ficha(l));e.target.textContent="Copiado ✓"}catch(x){prompt("Copie:",ficha(l))}});
-  var a=document.createElement("a");a.className="btn g";a.textContent="WhatsApp";a.target="_blank";a.rel="noopener";a.href="https://wa.me/55"+dg(l.zap)+"?text="+encodeURIComponent("Olá "+String(l.nome).split(" ")[0]+", vi seu cadastro para ser ponto de coleta.");w.appendChild(a);
-  B("Contatado","alt",async function(){await api("PATCH","?id="+l.id,{status:"contatado"});load()});
-  B("Fechado","alt",async function(){await api("PATCH","?id="+l.id,{status:"fechado"});load()});
-  B("Excluir","r",async function(){if(confirm("Excluir este lead?")){await api("DELETE","?id="+l.id);load()}});
-  c.appendChild(w);h.appendChild(c)})}
+var allLeads=[],loading=false,lastStamp="",expanded=new Set(),searchTerm="",statusFilter="todos";
+function safe(v){return String(v==null?"":v)}
+function dateText(v){var d=new Date(v);return Number.isNaN(d.getTime())?"—":d.toLocaleString("pt-BR")}
+function node(tag,cls,txt){var e=document.createElement(tag);if(cls)e.className=cls;if(txt!==undefined)e.textContent=safe(txt);return e}
+function rowKV(parent,k,v){var r=node("div","kv"),key=node("span","kvkey",k),val=node("span","kvvalue",v||"—");r.append(key,val);parent.appendChild(r)}
+function section(parent,title,items){var sec=node("section","detail-section"),h=node("h4","",title);sec.appendChild(h);items.forEach(x=>rowKV(sec,x[0],x[1]));parent.appendChild(sec)}
+function getVisible(){return allLeads.filter(l=>{
+ var m=$("meetingFilter").value,st=$("statusFilter").value;
+ if(m!=="todos" && (m==="pendente" ? !!l.reuniao_video : l.reuniao_video!==m))return false;
+ if(st!=="todos" && safe(l.status||"novo")!==st)return false;
+ var q=searchTerm.trim().toLowerCase();if(!q)return true;
+ return [l.nome,l.cpf,l.cnpj,l.fant,l.cid,l.zap,l.seg].some(x=>safe(x).toLowerCase().includes(q));
+})}
+function renderFiltered(){var d=getVisible();$("shown").textContent=d.length+" exibidas";renderLeads(d)}
+function stats(){var total=allLeads.length,novo=allLeads.filter(l=>!l.status||l.status==="novo").length,aceitos=allLeads.filter(l=>l.reuniao_video==="aceitou").length,recusados=allLeads.filter(l=>l.reuniao_video==="nao_aceitou").length;
+ [["statTotal",total],["statNew",novo],["statYes",aceitos],["statNo",recusados]].forEach(x=>$(x[0]).textContent=x[1]);$("cnt").textContent=total+" fichas no banco"}
+function renderLeads(d){var h=$("list");h.replaceChildren();if(!d.length){h.appendChild(node("div","empty","Nenhuma ficha encontrada com esses filtros."));return}
+ d.forEach(l=>{
+  var c=node("article","lead-card"),head=node("div","lead-head"),main=node("div","lead-main"),nm=node("div","lead-name",l.nome||"Cadastro sem nome"),sub=node("div","lead-sub",[l.fant,l.cid].filter(Boolean).join(" · ")||"Dados em atualização");
+  main.append(nm,sub);
+  var chips=node("div","chips"),st=safe(l.status||"novo"),badge=node("span","pill "+(st==="contatado"?"picked":st==="fechado"?"closed":"new"),st==="contatado"?"Peguei":st==="fechado"?"Fechado":"Novo");
+  chips.appendChild(badge);
+  chips.appendChild(node("span","pill "+(l.reuniao_video==="aceitou"?"yes":l.reuniao_video==="nao_aceitou"?"no":"muted"),l.reuniao_video==="aceitou"?"Aceitou reunião":l.reuniao_video==="nao_aceitou"?"Orientação por telefone":"Reunião pendente"));
+  head.append(main,chips);c.appendChild(head);
+  var meta=node("div","lead-meta");rowKV(meta,"CNPJ",l.cnpj);rowKV(meta,"WhatsApp",l.zap);rowKV(meta,"Recebido",dateText(l.created_at));c.appendChild(meta);
+  var actions=node("div","actions");
+  function act(label,cls,fn){var b=node("button","action "+cls,label);b.type="button";b.onclick=fn;actions.appendChild(b);return b}
+  if(st==="novo")act("✓ Peguei","primary",async b=>{});
+  // Botão Peguei utiliza o status já suportado pela API: contatado.
+  if(st==="novo"){var pick=actions.lastChild;pick.onclick=async()=>{pick.disabled=true;try{var r=await api("PATCH","?id="+encodeURIComponent(l.id),{status:"contatado"});if(!r.ok)throw Error();l.status="contatado";stats();renderFiltered()}catch(e){alert("Não foi possível marcar a ficha. Tente novamente.");pick.disabled=false}}}
+  act("Copiar ficha","secondary",async()=>{var ok=await copyText(ficha(l));$("feedback").textContent=ok?"Ficha copiada. Status mantido.":"Falha ao copiar a ficha."});
+  var more=act(expanded.has(l.id)?"Ocultar detalhes":"Ver ficha","secondary",()=>{if(expanded.has(l.id))expanded.delete(l.id);else expanded.add(l.id);renderFiltered()});
+  var a=node("a","action whatsapp","WhatsApp");a.href="https://wa.me/55"+dg(l.zap)+"?text="+encodeURIComponent("Olá "+safe(l.nome).split(" ")[0]+", vi seu cadastro para ser ponto de coleta.");a.target="_blank";a.rel="noopener noreferrer";actions.appendChild(a);
+  c.appendChild(actions);
+  if(expanded.has(l.id)){
+   var details=node("div","details"),q=qualificacao(l);
+   section(details,"Dados do cadastro",[["Nome",l.nome],["CPF",l.cpf],["CNPJ",l.cnpj],["Negócio",l.fant],["Cidade / UF",l.cid],["Segmento",l.seg],["Espaço",l.m2],["Faturamento",l.fat],["WhatsApp",l.zap],["E-mail",l.mail]]);
+   section(details,"Qualificação",[["Bancos",q.bancos.join(", ")],["Dispositivo",q.dispositivo],["Horário",q.horario],["Reunião",meetingLabel(l)],["Quiz",safe(l.quiz).split(" | ").join(" • ")]]);
+   if(l.cpf_dados)section(details,"Consulta CPF (somente admin)",dadosCPF(l.cpf_dados));
+   if(l.cnpj_dados)section(details,"Dados da Receita (CNPJ)",dados(l.cnpj_dados));
+   var detailActions=node("div","detail-actions");
+   function detailBtn(label,cls,cb){var b=node("button","action "+cls,label);b.onclick=cb;detailActions.appendChild(b);return b}
+   
+   if(st!=="fechado")detailBtn("Fechado","secondary",async()=>{var r=await api("PATCH","?id="+encodeURIComponent(l.id),{status:"fechado"});if(r.ok){l.status="fechado";stats();renderFiltered()}else alert("Falha ao atualizar status.")});
+   detailBtn("Excluir","danger",async()=>{if(!confirm("Excluir definitivamente esta ficha?"))return;var r=await api("DELETE","?id="+encodeURIComponent(l.id));if(r.ok){allLeads=allLeads.filter(x=>x.id!==l.id);expanded.delete(l.id);stats();renderFiltered()}else alert("Falha ao excluir.")});
+   details.appendChild(detailActions);c.appendChild(details);
+  }
+  h.appendChild(c)
+ })}
+async function load(silent=false){if(loading||!PW||document.hidden)return;loading=true;$("syncState").textContent="Atualizando…";
+ try{var r=await api("GET");if(r.status===401){sessionStorage.removeItem("pw");PW="";$("login").style.display="block";$("app").style.display="none";$("e").textContent="Senha incorreta ou sessão expirada.";return}
+ if(!r.ok)throw Error("Falha ao consultar fichas.");
+ var d=await r.json();if(!Array.isArray(d))throw Error("Resposta inesperada.");
+ var stamp=JSON.stringify(d);allLeads=d;$("login").style.display="none";$("app").style.display="block";stats();
+ if(stamp!==lastStamp||!silent){lastStamp=stamp;renderFiltered()}
+ $("syncState").textContent="Atualizado às "+new Date().toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit",second:"2-digit"});
+ }catch(e){$("syncState").textContent="Sem conexão. Nova tentativa em 15 s."}finally{loading=false}}
+$("copyPending").onclick=()=>copyBulk("pending");
+$("copyAll").onclick=()=>copyBulk("all");
 $("go").onclick=function(){PW=$("pw").value;sessionStorage.setItem("pw",PW);load()};
 $("pw").onkeydown=function(e){if(e.key==="Enter")$("go").click()};
-$("rf").onclick=load;$("out").onclick=function(){sessionStorage.removeItem("pw");PW="";load()};
+$("rf").onclick=()=>load();$("out").onclick=function(){sessionStorage.removeItem("pw");PW="";$("app").style.display="none";$("login").style.display="block"};
+$("meetingFilter").onchange=renderFiltered;$("statusFilter").onchange=renderFiltered;
+$("search").oninput=function(){searchTerm=this.value;renderFiltered()};
+setInterval(()=>{if(PW&&!document.hidden)load(true)},15000);
+document.addEventListener("visibilitychange",()=>{if(!document.hidden&&PW)load(true)});
+$("backup").onclick=async function(){
+ try {var r=await fetch("/api/backup",{headers:{"x-admin-password":PW}});if(!r.ok)throw Error("Não foi possível baixar o backup ("+r.status+")");
+ var blob=await r.blob(),a=document.createElement("a"),url=URL.createObjectURL(blob);a.href=url;a.download="fichas-coleta-"+new Date().toISOString().slice(0,10)+".json";a.click();setTimeout(function(){URL.revokeObjectURL(url)},1000);$("backupInfo").textContent="Backup baixado. Guarde o arquivo em local privado e protegido.";
+ }catch(e){$("backupInfo").textContent=e.message}
+};
+$("importBackup").onclick=function(){$("jsonFile").click()};
+$("jsonFile").onchange=async function(){var file=this.files&&this.files[0];if(!file)return;
+ try {if(file.size>3*1024*1024)throw Error("Arquivo grande demais. Divida em lotes menores.");var obj=JSON.parse(await file.text());if(obj.format!=="coleta-fichas-v1"||!Array.isArray(obj.leads))throw Error("Backup JSON inválido.");
+ if(!confirm("Importar "+obj.leads.length+" fichas? CPF ou CNPJ repetidos serão ignorados."))return;
+ var totals={imported:0,duplicates:0,invalid:0};$("backupInfo").textContent="Importando...";
+ for(var i=0;i<obj.leads.length;i+=100){var r=await fetch("/api/backup",{method:"POST",headers:{"Content-Type":"application/json","x-admin-password":PW},body:JSON.stringify({format:"coleta-fichas-v1",leads:obj.leads.slice(i,i+100)})});var d=await r.json();if(!r.ok)throw Error("Falha na importação ("+r.status+"). Já importadas: "+totals.imported);Object.keys(totals).forEach(k=>totals[k]+=d[k]||0)}
+ $("backupInfo").textContent="Importadas: "+totals.imported+" | Repetidas: "+totals.duplicates+" | Inválidas: "+totals.invalid;await load();
+ }catch(e){$("backupInfo").textContent=e.message}finally{this.value=""}
+};
 if(PW)load();
 </script></body></html>
