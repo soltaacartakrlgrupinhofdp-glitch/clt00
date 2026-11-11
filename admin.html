@@ -29,16 +29,48 @@ body{background:#090b0e;color:#edf0f3}
 .empty{background:#12161c;border-color:#343d49;color:#9aa4b1}
 .feedback{color:#b9c3ce}.err{color:#ff8f8f}
 @media(max-width:750px){.toolbar .btn{flex:1 1 100%}}
-</style></head><body><header class="header"><div class="header-inner"><img class="brand-logo" src="img/logo.jpg" alt="" onerror="this.style.display='none'"><div><div class="brand-title">Ponto de Coleta</div><div class="brand-sub">Painel de fichas</div></div></div></header>
+</style><style>
+.hand-action{display:inline-flex;align-items:center;gap:7px;border-radius:12px!important;font-weight:800!important}
+.hand-action:before{content:"";width:6px;height:6px;border-radius:50%;background:#29251b;box-shadow:0 0 0 4px #28220e22}
+.action.copy-action{border-color:#53606d;background:#252d37}
+.action.done{background:#173e2c!important;border-color:#2c8d55!important;color:#bbf7ce!important}
+.toast{position:fixed;bottom:22px;left:50%;transform:translate(-50%,20px);background:#183d2b;color:#d3ffe1;padding:13px 19px;border:1px solid #2c8d55;border-radius:14px;box-shadow:0 10px 36px #0008;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:100;max-width:min(92vw,500px);font-size:13px;font-weight:700;text-align:center}
+.toast.show{opacity:1;transform:translate(-50%,0)}.toast.error{background:#481f20;border-color:#a84444;color:#ffe4e4}
+@media(max-width:600px){.lead-card .actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.lead-card .action{text-align:center;justify-content:center}}
+</style><style>
+.live-strip{background:#111a17;border:1px solid #234c35;border-radius:14px;padding:12px 15px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin:14px 0 4px}
+.live-indicator,.live-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:12px}.live-indicator strong{font-size:13px;color:#b8f6cd}.live-indicator #syncState,.live-every{color:#9db6a7}.live-divider{color:#4e7660}
+.live-dot{width:10px;height:10px;border-radius:50%;display:inline-block;flex:none;background:#9ba4b0}.live-dot.online{background:#33db7e;box-shadow:0 0 0 4px #33db7e20,0 0 13px #33db7e88;animation:livePulse 2.5s ease-in-out infinite}.live-dot.offline{background:#ed7777;box-shadow:0 0 0 4px #ed777720}.live-dot.pending{background:#f2c94c;box-shadow:0 0 0 4px #f2c94c22}
+@keyframes livePulse{50%{box-shadow:0 0 0 6px #33db7e12,0 0 18px #33db7e88}}
+.clock-now{color:#e8f5ec;font-size:14px;font-weight:800;font-variant-numeric:tabular-nums}.refresh-btn{background:#193e2a!important;color:#d0f5da!important;border-color:#35714b!important;padding:9px 13px!important}.refresh-btn:disabled{opacity:.6;cursor:wait}
+@media(max-width:680px){.live-strip{align-items:flex-start}.live-right{width:100%;justify-content:space-between}.live-every{display:none}}
+</style><style>
+.header-inner{justify-content:space-between;max-width:1220px}
+.header .live-strip{margin:0 0 0 auto;padding:0;background:transparent;border:0;display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-wrap:nowrap}
+.header .live-indicator{gap:6px;white-space:nowrap}
+.header .live-indicator strong{font-size:11px;font-weight:700}
+.header .live-dot{width:7px;height:7px}
+.header #syncState{font-size:11px;color:#85918d}
+.header .live-divider{display:none}
+.header .live-right{gap:7px;white-space:nowrap}
+.header .clock-now{font-size:11px;font-weight:600;color:#96a69e}
+.header .live-every{display:none}
+.header .refresh-btn{padding:7px 9px;font-size:11px;border-radius:8px;background:#17251d;border-color:#254331;color:#c3e7cd}
+@media(max-width:650px){.header-inner{gap:7px}.header .brand-title{font-size:13px}.header .brand-sub{font-size:10px}.header #syncState,.header .clock-now{display:none}.header .live-indicator strong{font-size:10px}.header .refresh-btn{font-size:0;padding:7px 9px}.header .refresh-btn::first-letter{font-size:14px}}
+</style></head><body><header class="header"><div class="header-inner"><img class="brand-logo" src="img/logo.jpg" alt="" onerror="this.style.display='none'"><div><div class="brand-title">Ponto de Coleta</div><div class="brand-sub">Painel de fichas</div></div><div class="live-strip" aria-label="Status de atualização do painel">
+  <div class="live-indicator"><span id="liveDot" class="live-dot pending"></span><strong id="liveLabel">Conectando…</strong><span class="live-divider">•</span><span id="syncState">Aguardando atualização</span></div>
+  <div class="live-right"><span id="clockNow" class="clock-now">--:--:--</span><span class="live-every">Atualiza a cada 15 s</span><button class="btn refresh-btn" id="rf" type="button">↻ Atualizar agora</button></div>
+</div>
+</div></header>
 <main class="container">
 <div id="login"><h2>Área administrativa</h2><p class="muted">Entre com a senha para acessar as fichas.</p><input id="pw" type="password" placeholder="Senha" autocomplete="current-password"><button class="btn btn-primary" id="go">Entrar</button><div class="err" id="e"></div></div>
 <div id="app" style="display:none">
-<div class="topbar"><div><h1>Fichas recebidas</h1><div class="muted"><span id="cnt"></span> · <span id="syncState">Sincronizando…</span> · atualização automática a cada 15 s</div></div><div class="toolbar"><button class="btn btn-primary" id="copyPending">Copiar novas e marcar Peguei</button><button class="btn" id="claimYes">Pegar novas que aceitaram reunião</button><button class="btn" id="claimNo">Pegar novas que recusaram reunião</button><button class="btn" id="copyAll">Copiar todas</button><button class="btn" id="rf">↻ Atualizar</button><button class="btn" id="backup">↓ Baixar JSON</button><button class="btn" id="importBackup">↑ Importar JSON</button><button class="btn" id="out">Sair</button></div></div>
+<div class="topbar"><div><h1>Fichas recebidas</h1><div class="muted" id="cnt"></div></div><div class="toolbar"><button class="btn btn-primary" id="copyPending">⧉ Copiar novas + Peguei</button><button class="btn" id="claimYes">✋ Pegar grupo: reunião</button><button class="btn" id="claimNo">✋ Pegar grupo: telefone</button><button class="btn" id="copyAll">⧉ Copiar histórico</button><button class="btn" id="backup">↓ Baixar JSON</button><button class="btn" id="importBackup">↑ Importar JSON</button><button class="btn" id="out">Sair</button></div></div>
 <div class="stats"><div class="stat"><span>Total de fichas</span><strong id="statTotal">0</strong></div><div class="stat"><span>Novas</span><strong id="statNew">0</strong></div><div class="stat"><span>Aceitaram reunião</span><strong id="statYes">0</strong></div><div class="stat"><span>Orientação por telefone</span><strong id="statNo">0</strong></div></div>
 <div class="filters"><input id="search" type="search" placeholder="Buscar por nome, CNPJ, CPF, telefone…"><select id="statusFilter" aria-label="Filtrar por situação"><option value="todos">Todos os status</option><option value="novo">Novas</option><option value="contatado">Peguei</option><option value="fechado">Fechadas</option></select><select id="meetingFilter" aria-label="Filtrar reunião"><option value="todos">Todas as reuniões</option><option value="aceitou">Aceitou reunião</option><option value="nao_aceitou">Orientação por telefone</option><option value="pendente">Sem resposta</option></select></div>
 <div class="list-heading"><h2>Cadastros</h2><span class="muted" id="shown"></span></div><div id="list"></div>
 <input type="file" id="jsonFile" accept=".json,application/json" hidden><div class="feedback" id="backupInfo"></div><div class="feedback" id="feedback" role="status" aria-live="polite"></div>
-</div></main><script>
+</div></main><div id="toast" class="toast" role="status" aria-live="polite"></div><script>
 var $=function(i){return document.getElementById(i)},PW=sessionStorage.getItem("pw")||"";
 function api(m,q,b){return fetch("/api/leads"+(q||""),{method:m,headers:{"x-admin-password":PW,"Content-Type":"application/json"},body:b?JSON.stringify(b):undefined})}
 function dg(s){return String(s||"").replace(/\D/g,"")}
@@ -87,6 +119,17 @@ async function copyBulk(mode){
   await load(true);
  }finally{bulkBusy=false;b.disabled=false;a.disabled=false}
 }
+function updateClock(){var n=new Date();$("clockNow").textContent=n.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit",second:"2-digit"})}
+function setLiveStatus(state,message){
+ $("liveDot").className="live-dot "+state;
+ $("liveLabel").textContent=state==="online"?"Online":state==="offline"?"Sem conexão":"Sincronizando";
+ $("syncState").textContent=message;
+}
+updateClock();setInterval(updateClock,1000);
+function showToast(message,error=false){
+ var t=$("toast");t.textContent=message;t.className="toast show"+(error?" error":"");
+ clearTimeout(showToast.timer);showToast.timer=setTimeout(()=>t.className="toast",3400);
+}
 function meetingLabel(l){return l.reuniao_video==="aceitou"?"Aceitou reunião por vídeo":l.reuniao_video==="nao_aceitou"?"Não aceitou — orientação por telefone":"Sem resposta registrada"}
 var allLeads=[],loading=false,lastStamp="",expanded=new Set(),searchTerm="",statusFilter="todos";
 function safe(v){return String(v==null?"":v)}
@@ -115,10 +158,36 @@ function renderLeads(d){var h=$("list");h.replaceChildren();if(!d.length){h.appe
   var meta=node("div","lead-meta");rowKV(meta,"CNPJ",l.cnpj);rowKV(meta,"WhatsApp",l.zap);rowKV(meta,"Recebido",dateText(l.created_at));c.appendChild(meta);
   var actions=node("div","actions");
   function act(label,cls,fn){var b=node("button","action "+cls,label);b.type="button";b.onclick=fn;actions.appendChild(b);return b}
-  if(st==="novo")act("✓ Peguei","primary",async b=>{});
-  // Botão Peguei utiliza o status já suportado pela API: contatado.
-  if(st==="novo"){var pick=actions.lastChild;pick.onclick=async()=>{pick.disabled=true;try{var r=await api("PATCH","?id="+encodeURIComponent(l.id),{status:"contatado"});if(!r.ok)throw Error();l.status="contatado";stats();renderFiltered()}catch(e){alert("Não foi possível marcar a ficha. Tente novamente.");pick.disabled=false}}}
-  act("Copiar ficha","secondary",async()=>{var ok=await copyText(ficha(l));$("feedback").textContent=ok?"Ficha copiada. Status mantido.":"Falha ao copiar a ficha."});
+  if(st==="novo"){
+    act("✋ Peguei","primary hand-action",async()=>{
+      var rbtn=actions.querySelector(".hand-action");rbtn.disabled=true;rbtn.textContent="⏳ Salvando…";
+      try{
+        var r=await api("PATCH","?id="+encodeURIComponent(l.id),{status:"contatado"});
+        if(!r.ok)throw Error("Falha ao salvar");
+        l.status="contatado";rbtn.textContent="✓ Peguei!";rbtn.classList.add("done");
+        stats();showToast("Ficha marcada como Peguei.");
+        setTimeout(renderFiltered,850);
+      }catch(e){rbtn.disabled=false;rbtn.textContent="✋ Peguei";showToast("Erro ao marcar. Tente novamente.",true)}
+    });
+  }
+  act("⧉ Copiar ficha","secondary copy-action",async()=>{
+    var copyBtn=actions.querySelector(".copy-action");
+    copyBtn.disabled=true;copyBtn.textContent="⏳ Copiando…";
+    var ok=await copyText(ficha(l));
+    if(!ok){copyBtn.textContent="Tentar copiar";copyBtn.disabled=false;showToast("Não foi possível copiar; ficha não foi marcada.",true);return}
+    copyBtn.textContent="✓ Copiado!";
+    copyBtn.classList.add("done");showToast("Ficha copiada para a área de transferência.");
+    // Ao copiar uma ficha NOVA, marcar automaticamente como Peguei.
+    if(!l.status||l.status==="novo"){
+      try{
+        var r=await api("PATCH","?id="+encodeURIComponent(l.id),{status:"contatado"});
+        if(!r.ok)throw Error("Falha ao salvar");
+        l.status="contatado";copyBtn.textContent="✓ Copiado e peguei!";
+        stats();showToast("Ficha copiada e marcada como Peguei.");
+      }catch(e){copyBtn.textContent="✓ Copiado (não marcado)";showToast("Copiado, mas não foi possível marcar como Peguei. Use o botão Peguei.",true)}
+    }
+    setTimeout(()=>{copyBtn.disabled=false;renderFiltered()},1400);
+  });
   var more=act(expanded.has(l.id)?"Ocultar detalhes":"Ver ficha","secondary",()=>{if(expanded.has(l.id))expanded.delete(l.id);else expanded.add(l.id);renderFiltered()});
   act("Excluir ficha","danger",async()=>{if(!confirm("Excluir definitivamente a ficha de "+safe(l.nome)+"? Essa ação não pode ser desfeita."))return;try{var rr=await api("DELETE","?id="+encodeURIComponent(l.id));if(!rr.ok)throw Error();allLeads=allLeads.filter(x=>x.id!==l.id);expanded.delete(l.id);stats();renderFiltered();$("feedback").textContent="Ficha excluída."}catch(e){alert("Não foi possível excluir a ficha.")}});
   var a=node("a","action whatsapp","WhatsApp");a.href="https://wa.me/55"+dg(l.zap)+"?text="+encodeURIComponent("Olá "+safe(l.nome).split(" ")[0]+", vi seu cadastro para ser ponto de coleta.");a.target="_blank";a.rel="noopener noreferrer";actions.appendChild(a);
@@ -138,14 +207,14 @@ function renderLeads(d){var h=$("list");h.replaceChildren();if(!d.length){h.appe
   }
   h.appendChild(c)
  })}
-async function load(silent=false){if(loading||!PW||document.hidden)return;loading=true;$("syncState").textContent="Atualizando…";
- try{var r=await api("GET");if(r.status===401){sessionStorage.removeItem("pw");PW="";$("login").style.display="block";$("app").style.display="none";$("e").textContent="Senha incorreta ou sessão expirada.";return}
+async function load(silent=false){if(loading||bulkBusy||!PW||document.hidden)return;loading=true;setLiveStatus("pending","Consultando fichas…");$("rf").disabled=true;
+ try{var r=await api("GET");if(r.status===401){sessionStorage.removeItem("pw");PW="";$("login").style.display="block";$("app").style.display="none";$("e").textContent="Senha incorreta ou sessão expirada.";setLiveStatus("offline","Sessão expirada");return}
  if(!r.ok)throw Error("Falha ao consultar fichas.");
  var d=await r.json();if(!Array.isArray(d))throw Error("Resposta inesperada.");
  var stamp=JSON.stringify(d);allLeads=d;$("login").style.display="none";$("app").style.display="block";stats();
  if(stamp!==lastStamp||!silent){lastStamp=stamp;renderFiltered()}
- $("syncState").textContent="Atualizado às "+new Date().toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit",second:"2-digit"});
- }catch(e){$("syncState").textContent="Sem conexão. Nova tentativa em 15 s."}finally{loading=false}}
+ setLiveStatus("online","Atualizado às "+new Date().toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit",second:"2-digit"}));
+ }catch(e){setLiveStatus("offline","Falha na atualização · nova tentativa em 15 s")}finally{loading=false;$("rf").disabled=false}}
 async function claimMeetingGroup(decision){
  var group=allLeads.filter(l=>l.reuniao_video===decision&&(!l.status||l.status==="novo"));
  if(!group.length){$("feedback").textContent="Não há fichas novas nesse grupo.";return}
