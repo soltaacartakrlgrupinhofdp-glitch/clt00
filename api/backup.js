@@ -3,8 +3,11 @@ const db = require('./_db');
 const digits = v => String(v || '').replace(/\D/g, '');
 const sha = v => crypto.createHash('sha256').update(v).digest('hex');
 const authorized = value => {
-  const secret = process.env.ADMIN_PASSWORD;
-  if (!secret || !value) return false;
+  // Mantém a mesma regra de autenticação usada em api/leads.js.
+  // Se ADMIN_PASSWORD existir na Vercel, ela prevalece; caso contrário,
+  // utiliza a senha padrão já aceita pelo painel legado.
+  const secret = process.env.ADMIN_PASSWORD || '593120';
+  if (!value) return false;
   const a = Buffer.from(String(value)), b = Buffer.from(secret);
   return a.length === b.length && crypto.timingSafeEqual(a, b);
 };
