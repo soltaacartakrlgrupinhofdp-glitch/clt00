@@ -186,7 +186,7 @@ if(!edited.cid&&r.cidade)$("cid").value=cap(r.cidade)+"/"+r.uf;
 if(!edited.seg&&r.atividade)$("seg").value=r.atividade;
 }catch(e){}});
 
-var cadastro=null, qualStep=0, qualData={bancos:[],dispositivo:"",horario:""};
+var cadastro=null, cadastroRef=null, qualStep=0, qualData={bancos:[],dispositivo:"",horario:""};
 var bankOptions=["Banco do Brasil","Bradesco","Caixa Econômica","Itaú","Santander","Nubank","Inter","C6 Bank","Mercado Pago","PagBank","Sicredi","Sicoob","BTG Pactual","Outro","Prefiro não informar"];
 function loadingFor(ms,phrases){return new Promise(function(resolve){var i=0;$("ld").classList.remove("hide");$("ldt").textContent=phrases[0];var timer=setInterval(function(){i=Math.min(i+1,phrases.length-1);$("ldt").textContent=phrases[i]},Math.max(700,ms/phrases.length));setTimeout(function(){clearInterval(timer);$("ld").classList.add("hide");resolve()},ms)})}
 function renderQual(){show("qualS");$("qualStep").textContent="ETAPA "+(qualStep+1)+" DE 3";$("qualProgress").style.width=((qualStep+1)/3*100)+"%";$("qualErr").textContent="";var body=$("qualBody");body.innerHTML="";
@@ -216,7 +216,7 @@ if(qualStep===2){var h=document.createElement("h3");h.textContent="Quando podemo
 }
 $("qualNext").onclick=async function(){if(qualStep===0&&!qualData.bancos.length){$("qualErr").textContent="Selecione ao menos uma opção.";return}if(qualStep===1&&!qualData.dispositivo){$("qualErr").textContent="Selecione o dispositivo.";return}if(qualStep===2&&!qualData.horario){$("qualErr").textContent="Escolha o horário de preferência.";return}if(qualStep<2){qualStep++;renderQual();return}
 var btn=$("qualNext");btn.disabled=true;
-var payload=Object.assign({},cadastro,{
+var payload=Object.assign({action:"finish",id:cadastroRef.id,token:cadastroRef.token},{
   bancos: qualData.bancos.slice(0,3),
   dispositivo: qualData.dispositivo,
   horario: qualData.horario,
@@ -236,6 +236,14 @@ $("send").onclick=async function(){
 var l={nome:$("nome").value.trim(),cpf:$("cpf").value,cnpj:$("cnpj").value,fant:$("fant").value.trim(),cid:$("cid").value.trim(),seg:$("seg").value,m2:$("m2").value,fat:$("fat").value,zap:$("zap").value,mail:$("mail").value.trim(),quiz:ans.join(" | "),website:$("website").value,consent:$("ok").checked},e="";
 if(l.nome.split(" ").length<2)e="Informe o nome completo.";else if(!vCPF(l.cpf))e="CPF inválido.";else if(!vCNPJ(l.cnpj))e="CNPJ inválido.";else if(cnpjAtivo===false)e="Este CNPJ não está ativo na Receita.";else if(!l.fant||!l.cid||!l.seg||!l.m2||!l.fat)e="Preencha todos os campos.";else if(dg(l.zap).length<10)e="WhatsApp inválido.";else if(!l.consent)e="É necessário autorizar o contato.";
 $("err").textContent=e;if(e)return;cadastro=l;$("send").disabled=true;
+$("ld").classList.remove("hide");$("ldt").textContent="Salvando sua ficha inicial...";
+try {
+ var rr=await fetch("/api/lead",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(Object.assign({action:"start"},l))});
+ var jj=await rr.json().catch(()=>({}));
+ if(!rr.ok||!jj.id||!jj.token)throw {error:jj.error};
+ cadastroRef={id:jj.id,token:jj.token};
+} catch(ex){$("ld").classList.add("hide");$("send").disabled=false;$("err").textContent=ex.error==="duplicate"?"Já existe uma ficha com este CNPJ. Aguarde o contato da equipe.":"Não foi possível salvar sua ficha. Verifique sua conexão e tente novamente.";return;}
+$("ld").classList.add("hide");
 await loadingFor(2800,["Conferindo os dados preenchidos...","Preparando as perguntas da operação...","Pronto! Você está quase lá."]);qualStep=0;renderQual();$("send").disabled=false;
 };
 </script></body></html>
