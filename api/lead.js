@@ -38,8 +38,27 @@ module.exports = async (req,res) => {
     if(reserved!=='OK') return res.status(409).json({error:'duplicate'});
     d.id=id;d.status='incompleto';d.created_at=new Date().toISOString();d._edit_hash=sha(token);
     try {await db(['HSET','leads',id,JSON.stringify(d)]);} catch(e){await db(['DEL',lock]).catch(()=>{});throw e;}
-    // Enriquecimento é opcional e não deve impedir a captura do cadastro.
-    // Consultas externas não são feitas no caminho crítico de gravação.
+    // A ficha inicial já está persistida. Recupera os dados detalhados
+    // das APIs ANTES de responder ao navegador, sem perder a ficha se falharem.
+    try {
+      const [cnpjResult, cpfResult] = await Promise.allSettled([
+        consulta(dg(d.cnpj)),
+        cpfApi.lookup(d.cpf)
+      ]);
+      if (cnpjResult.status === 'fulfilled' && cnpjResult.value) {
+        d.cnpj_dados = detalhes(cnpjResult.value);
+        d.cnpj_consulta_status = 'ok';
+      } else {
+        d.cnpj_consulta_status = 'indisponivel';
+      }
+      if (cpfResult.status === 'fulfilled' && cpfResult.value) {
+        d.cpf_dados = cpfResult.value;
+      }
+      await db(['HSET','leads',id,JSON.stringify(d)]);
+    } catch (enrichmentError) {
+      console.error('enrichment failure', enrichmentError.message);
+      // O cadastro inicial continua salvo e o usuário pode avançar.
+    }
     return res.status(200).json({ok:true,id,token});
   }catch(e){console.error('lead failure',e.message);return res.status(500).json({error:'db'});}
 };

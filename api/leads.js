@@ -22,7 +22,18 @@ module.exports = async (req, res) => {
       await db(['HSET', 'leads', id, JSON.stringify(l)]);
       return res.status(200).json({ ok: true });
     }
-    if (req.method === 'DELETE') { await db(['HDEL', 'leads', id]); return res.status(200).json({ ok: true }); }
+    if (req.method === 'DELETE') {
+      const raw = await db(['HGET', 'leads', id]);
+      if (!raw) return res.status(404).json({ error: 'nf' });
+      const lead = JSON.parse(raw);
+      const cnpj = String(lead.cnpj || '').replace(/\D/g, '');
+      const lock = 'coleta:cnpj:' + crypto.createHash('sha256').update(cnpj).digest('hex');
+      // Remove o índice apenas se ele pertence à ficha excluída.
+      // Script atômico impede liberar o bloqueio de outro registro.
+      const script = "if redis.call('GET', KEYS[1]) == ARGV[1] then redis.call('DEL', KEYS[1]) end; return redis.call('HDEL', KEYS[2], ARGV[1])";
+      await db(['EVAL', script, '2', lock, 'leads', id]);
+      return res.status(200).json({ ok: true });
+    }
     return res.status(405).json({ error: 'method' });
   } catch (e) { return res.status(500).json({ error: 'db' }); }
 };
